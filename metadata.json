@@ -1,6 +1,8 @@
 {
-  "name": "",
-  "description": "",
+  "name": "LawBuddy",
+  "description": "India's Legal Learning Platform offering LLB notes, Bare Acts, Case Laws, and Judiciary exam prep.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

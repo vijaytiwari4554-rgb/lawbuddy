@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper to check if user is operating on their own data
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Users collection rules
+    match /users/{userId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Bookmarks collection rules
+    match /bookmarks/{bookmarkId} {
+      allow read: if isAuthenticated();
+      allow create, delete, update: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // Downloads history
+    match /downloads/{downloadId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // Uploaded academic legal resources (notes, question papers, bare acts, case laws)
+    match /uploaded_materials/{materialId} {
+      allow read: if true; // anyone can search or read
+      allow write: if isAuthenticated(); // Authenticated users (students or admins) can upload
+    }
+
+    // Chat sessions for LawBuddy AI
+    match /chat_history/{chatId} {
+      allow read, write: if isAuthenticated() && resource == null || resource.data.userId == request.auth.uid;
+    }
+  }
+}
