@@ -14,7 +14,7 @@ interface PaperMock {
 }
 
 export const QuestionPapers: React.FC = () => {
-  const { recordDownload } = useApp();
+  const { recordDownload, isDarkMode } = useApp();
   
   // State variables for search and filtering
   const [searchTerm, setSearchTerm] = useState("");
@@ -64,16 +64,18 @@ export const QuestionPapers: React.FC = () => {
       
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <h1 className="font-poppins text-3xl sm:text-4xl font-extrabold text-white">
+        <h1 className={`font-poppins text-3xl sm:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>
           Previous Year <span className="gold-gradient-text">Question Papers</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+        <p className={`text-xs sm:text-sm leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
           Search, filter, preview, and download authentic university LLB examinations papers spanning multiple semesters and academic years.
         </p>
       </div>
 
       {/* FILTER SEARCH BAR BAR */}
-      <div className="p-6 bg-[#121826] border border-[#1E293B] rounded-2xl space-y-4 shadow-xl">
+      <div className={`p-6 border rounded-2xl space-y-4 shadow-xl ${
+        isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+      }`}>
         <div className="flex flex-col lg:flex-row items-center gap-4">
           
           {/* Search bar input */}
@@ -85,7 +87,9 @@ export const QuestionPapers: React.FC = () => {
               placeholder="Search by subject, year, or university name..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-[#0B0F19] border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs sm:text-sm text-white focus:outline-none placeholder-slate-500 transition-colors"
+              className={`w-full pl-10 pr-4 py-2.5 border rounded-xl text-xs sm:text-sm focus:outline-none placeholder-slate-500 transition-colors ${
+                isDarkMode ? "bg-[#0B0F19] border-[#1E293B] focus:border-[#D4AF37] text-white" : "bg-slate-50 border-slate-200 focus:border-[#D4AF37] text-slate-800"
+              }`}
             />
           </div>
 
@@ -93,52 +97,58 @@ export const QuestionPapers: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
             
             {/* Year filter */}
-            <div className="flex items-center space-x-1.5 bg-[#0B0F19] border border-[#1E293B] px-3 py-1.5 rounded-xl">
+            <div className={`flex items-center space-x-1.5 border px-3 py-1.5 rounded-xl ${
+              isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+            }`}>
               <span className="text-[10px] text-slate-500 font-bold uppercase">Year:</span>
               <select 
                 id="filter-year"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="bg-transparent text-white text-xs font-semibold focus:outline-none cursor-pointer"
+                className={`bg-transparent text-xs font-semibold focus:outline-none cursor-pointer ${isDarkMode ? "text-white" : "text-slate-700"}`}
               >
-                <option value="All" className="bg-[#0B0F19]">All Years</option>
-                <option value="2024" className="bg-[#0B0F19]">2024</option>
-                <option value="2023" className="bg-[#0B0F19]">2023</option>
-                <option value="2022" className="bg-[#0B0F19]">2022</option>
+                <option value="All" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>All Years</option>
+                <option value="2024" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>2024</option>
+                <option value="2023" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>2023</option>
+                <option value="2022" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>2022</option>
               </select>
             </div>
 
             {/* Semester Filter */}
-            <div className="flex items-center space-x-1.5 bg-[#0B0F19] border border-[#1E293B] px-3 py-1.5 rounded-xl">
+            <div className={`flex items-center space-x-1.5 border px-3 py-1.5 rounded-xl ${
+              isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+            }`}>
               <span className="text-[10px] text-slate-500 font-bold uppercase">Semester:</span>
               <select 
                 id="filter-semester"
                 value={selectedSemester}
                 onChange={(e) => setSelectedSemester(e.target.value)}
-                className="bg-transparent text-white text-xs font-semibold focus:outline-none cursor-pointer"
+                className={`bg-transparent text-xs font-semibold focus:outline-none cursor-pointer ${isDarkMode ? "text-white" : "text-slate-700"}`}
               >
-                <option value="All" className="bg-[#0B0F19]">All</option>
-                <option value="1" className="bg-[#0B0F19]">Sem 1</option>
-                <option value="2" className="bg-[#0B0F19]">Sem 2</option>
-                <option value="3" className="bg-[#0B0F19]">Sem 3</option>
-                <option value="4" className="bg-[#0B0F19]">Sem 4</option>
-                <option value="5" className="bg-[#0B0F19]">Sem 5</option>
-                <option value="6" className="bg-[#0B0F19]">Sem 6</option>
+                <option value="All" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>All</option>
+                <option value="1" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>Sem 1</option>
+                <option value="2" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>Sem 2</option>
+                <option value="3" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>Sem 3</option>
+                <option value="4" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>Sem 4</option>
+                <option value="5" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>Sem 5</option>
+                <option value="6" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>Sem 6</option>
               </select>
             </div>
 
             {/* University Filter */}
-            <div className="flex items-center space-x-1.5 bg-[#0B0F19] border border-[#1E293B] px-3 py-1.5 rounded-xl">
+            <div className={`flex items-center space-x-1.5 border px-3 py-1.5 rounded-xl ${
+              isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+            }`}>
               <span className="text-[10px] text-slate-500 font-bold uppercase">Uni:</span>
               <select 
                 id="filter-uni"
                 value={selectedUniversity}
                 onChange={(e) => setSelectedUniversity(e.target.value)}
-                className="bg-transparent text-white text-xs font-semibold focus:outline-none cursor-pointer max-w-[120px]"
+                className={`bg-transparent text-xs font-semibold focus:outline-none cursor-pointer max-w-[120px] ${isDarkMode ? "text-white" : "text-slate-700"}`}
               >
-                <option value="All" className="bg-[#0B0F19]">All Unis</option>
+                <option value="All" className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>All Unis</option>
                 {UNIVERSITIES.map((uni) => (
-                  <option key={uni.id} value={uni.shortName} className="bg-[#0B0F19]">{uni.shortName}</option>
+                  <option key={uni.id} value={uni.shortName} className={isDarkMode ? "bg-[#0B0F19]" : "bg-white"}>{uni.shortName}</option>
                 ))}
               </select>
             </div>
@@ -153,7 +163,9 @@ export const QuestionPapers: React.FC = () => {
         {filteredPapers.map((paper) => (
           <div 
             key={paper.id}
-            className="p-5 bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/35 rounded-2xl flex flex-col justify-between gap-6 transition-all duration-300"
+            className={`p-5 border rounded-2xl flex flex-col justify-between gap-6 transition-all duration-300 shadow-sm ${
+              isDarkMode ? "bg-[#121826] border-[#1E293B] hover:border-[#D4AF37]/35" : "bg-white border-slate-200 hover:border-[#D4AF37]/50"
+            }`}
           >
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -164,17 +176,19 @@ export const QuestionPapers: React.FC = () => {
               </div>
               
               <div className="space-y-1">
-                <h4 className="font-poppins text-base font-bold text-white leading-snug">
+                <h4 className={`font-poppins text-base font-bold leading-snug ${isDarkMode ? "text-white" : "text-slate-800"}`}>
                   {paper.title} Examination Paper
                 </h4>
-                <p className="text-xs text-slate-400">Semester {paper.semester} • Max Marks: {paper.marks}</p>
+                <p className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Semester {paper.semester} • Max Marks: {paper.marks}</p>
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-[#1E293B] gap-4">
+            <div className={`flex items-center justify-between pt-4 border-t gap-4 ${isDarkMode ? "border-[#1E293B]" : "border-slate-100"}`}>
               <button 
                 onClick={() => handlePreview(paper.title)}
-                className="px-4 py-2 bg-[#0B0F19] hover:bg-white/[0.03] text-slate-300 hover:text-white border border-[#1E293B] rounded-lg text-xs font-semibold flex items-center space-x-1"
+                className={`px-4 py-2 border rounded-lg text-xs font-semibold flex items-center space-x-1 ${
+                  isDarkMode ? "bg-[#0B0F19] hover:bg-white/[0.03] text-slate-300 hover:text-white border-[#1E293B]" : "bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 border-slate-200 shadow-sm"
+                }`}
               >
                 <Eye className="w-3.5 h-3.5" />
                 <span>Web Preview</span>
@@ -182,7 +196,7 @@ export const QuestionPapers: React.FC = () => {
 
               <button 
                 onClick={() => handleDownload(paper.id, paper.title)}
-                className="px-4 py-2 bg-[#D4AF37] hover:bg-[#C5A028] text-[#0B0F19] font-bold rounded-lg text-xs flex items-center space-x-1.5"
+                className="px-4 py-2 bg-[#D4AF37] hover:bg-[#C5A028] text-[#0B0F19] font-bold rounded-lg text-xs flex items-center space-x-1.5 shadow-sm"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Download PDF</span>
@@ -192,9 +206,11 @@ export const QuestionPapers: React.FC = () => {
         ))}
 
         {filteredPapers.length === 0 && (
-          <div className="col-span-full p-12 text-center bg-[#121826] border border-dashed border-[#1E293B] rounded-2xl">
+          <div className={`col-span-full p-12 text-center border border-dashed rounded-2xl ${
+            isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200 shadow-sm"
+          }`}>
             <Clipboard className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <h4 className="font-poppins text-base font-bold text-white mb-1">No exam papers found</h4>
+            <h4 className={`font-poppins text-base font-bold mb-1 ${isDarkMode ? "text-white" : "text-slate-800"}`}>No exam papers found</h4>
             <p className="text-xs text-slate-400">Try modifying your filter settings or search query above.</p>
           </div>
         )}

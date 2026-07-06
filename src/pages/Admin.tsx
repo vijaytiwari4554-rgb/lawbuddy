@@ -8,7 +8,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 
 export const Admin: React.FC = () => {
-  const { userProfile } = useApp();
+  const { userProfile, isDarkMode } = useApp();
   
   const [activeAdminTab, setActiveAdminTab] = useState<'upload' | 'users' | 'analytics'>('upload');
   
@@ -59,18 +59,20 @@ export const Admin: React.FC = () => {
     <div id="admin-management-portal" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
       
       {/* Header Banner */}
-      <div className="p-6 bg-red-500/10 border-2 border-red-500/25 rounded-2xl flex items-start gap-4">
+      <div className={`p-6 border-2 rounded-2xl flex items-start gap-4 ${
+        isDarkMode ? "bg-red-500/10 border-red-500/25" : "bg-red-50 border-red-200"
+      }`}>
         <ShieldAlert className="w-8 h-8 text-[#D4AF37] flex-shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <h2 className="font-poppins text-lg font-bold text-white">LawBuddy Administration Console</h2>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <h2 className={`font-poppins text-lg font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>LawBuddy Administration Console</h2>
+          <p className={`text-xs leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
             Authorized admin credentials detected for {userProfile?.displayName || "admin"}. Publish notes, previous year papers, bare acts commentaries, and track platform metrics.
           </p>
         </div>
       </div>
 
       {/* ADMIN TABS SELECTOR */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-[#1E293B] pb-4">
+      <div className={`flex flex-wrap items-center gap-2 border-b pb-4 ${isDarkMode ? "border-[#1E293B]" : "border-slate-200"}`}>
         {[
           { id: 'upload', label: "Publish Materials", icon: Upload },
           { id: 'users', label: "Manage User Profiles", icon: Users },
@@ -84,7 +86,9 @@ export const Admin: React.FC = () => {
               className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center space-x-2 border ${
                 isActive 
                   ? "bg-[#D4AF37] text-[#0B0F19] font-bold border-[#D4AF37]" 
-                  : "bg-[#121826] text-slate-300 hover:text-white border-[#1E293B]"
+                  : isDarkMode 
+                    ? "bg-[#121826] text-slate-300 hover:text-white border-[#1E293B]"
+                    : "bg-white text-slate-600 hover:text-slate-900 border-slate-200 shadow-sm"
               }`}
             >
               <tab.icon className="w-4 h-4" />
@@ -95,14 +99,16 @@ export const Admin: React.FC = () => {
       </div>
 
       {/* CORE WORKSPACE PANEL */}
-      <div className="bg-[#121826] border border-[#1E293B] rounded-2xl p-6 sm:p-8 min-h-[400px] shadow-xl">
+      <div className={`border rounded-2xl p-6 sm:p-8 min-h-[400px] shadow-xl ${
+        isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+      }`}>
         
         {/* TAB 1: UPLOAD DOCUMENTS FORM */}
         {activeAdminTab === "upload" && (
           <div className="max-w-3xl space-y-6">
             <div>
-              <h3 className="font-poppins text-xl font-bold text-white">Publish New Study Resource</h3>
-              <p className="text-xs text-slate-400 mt-1">This form pushes materials instantly to Firestore. They will appear dynamically on the academic dashboards.</p>
+              <h3 className={`font-poppins text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Publish New Study Resource</h3>
+              <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>This form pushes materials instantly to Firestore. They will appear dynamically on the academic dashboards.</p>
             </div>
 
             {isSuccess && (
@@ -123,7 +129,9 @@ export const Admin: React.FC = () => {
                     id="admin-upload-type"
                     value={materialType}
                     onChange={(e) => setMaterialType(e.target.value as any)}
-                    className="w-full px-3 py-2.5 bg-[#0B0F19] border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs text-white focus:outline-none"
+                    className={`w-full px-3 py-2.5 border focus:border-[#D4AF37] rounded-xl text-xs focus:outline-none ${
+                      isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-white" : "bg-slate-50 border-slate-200 text-slate-800"
+                    }`}
                   >
                     <option value="note">Syllabus Study Note</option>
                     <option value="paper">Previous Year Question Paper</option>
@@ -138,7 +146,9 @@ export const Admin: React.FC = () => {
                     id="admin-upload-uni"
                     value={uni}
                     onChange={(e) => setUni(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-[#0B0F19] border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs text-white focus:outline-none"
+                    className={`w-full px-3 py-2.5 border focus:border-[#D4AF37] rounded-xl text-xs focus:outline-none ${
+                      isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-white" : "bg-slate-50 border-slate-200 text-slate-800"
+                    }`}
                   >
                     <option value="Mumbai University">Mumbai University</option>
                     <option value="Delhi University">Delhi University</option>
@@ -159,7 +169,9 @@ export const Admin: React.FC = () => {
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-[#0B0F19] border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs text-white focus:outline-none placeholder-slate-600 transition-colors"
+                  className={`w-full px-4 py-2.5 border focus:border-[#D4AF37] rounded-xl text-xs focus:outline-none placeholder-slate-500 transition-colors ${
+                    isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-white" : "bg-slate-50 border-slate-200 text-slate-800"
+                  }`}
                 />
               </div>
 
@@ -174,7 +186,9 @@ export const Admin: React.FC = () => {
                   required
                   value={sem}
                   onChange={(e) => setSem(Number(e.target.value))}
-                  className="w-full px-4 py-2.5 bg-[#0B0F19] border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs text-white focus:outline-none"
+                  className={`w-full px-4 py-2.5 border focus:border-[#D4AF37] rounded-xl text-xs focus:outline-none ${
+                    isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-white" : "bg-slate-50 border-slate-200 text-slate-800"
+                  }`}
                 />
               </div>
 
@@ -188,7 +202,9 @@ export const Admin: React.FC = () => {
                   required
                   value={descOrContent}
                   onChange={(e) => setDescOrContent(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#0B0F19] border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs text-white focus:outline-none placeholder-slate-600 transition-colors font-mono"
+                  className={`w-full px-4 py-3 border focus:border-[#D4AF37] rounded-xl text-xs focus:outline-none placeholder-slate-500 transition-colors font-mono ${
+                    isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-white" : "bg-slate-50 border-slate-200 text-slate-800"
+                  }`}
                 />
               </div>
 
@@ -208,13 +224,15 @@ export const Admin: React.FC = () => {
         {activeAdminTab === "users" && (
           <div className="space-y-6">
             <div>
-              <h3 className="font-poppins text-xl font-bold text-white">Registered Student Database Profiles</h3>
-              <p className="text-xs text-slate-400 mt-1">Audit active profiles and elevate testing users to Pro or Lifetime status instantly.</p>
+              <h3 className={`font-poppins text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Registered Student Database Profiles</h3>
+              <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Audit active profiles and elevate testing users to Pro or Lifetime status instantly.</p>
             </div>
-            <div className="border border-[#1E293B] rounded-xl overflow-hidden">
+            <div className={`border rounded-xl overflow-hidden ${isDarkMode ? "border-[#1E293B]" : "border-slate-200"}`}>
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-[#0B0F19] border-b border-[#1E293B] text-slate-400 uppercase font-semibold">
+                  <tr className={`border-b uppercase font-semibold ${
+                    isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-slate-400" : "bg-slate-50 border-slate-200 text-slate-500"
+                  }`}>
                     <th className="p-4">Student Profile Name</th>
                     <th className="p-4">Email Coordinates</th>
                     <th className="p-4">Role Permission</th>
@@ -222,10 +240,12 @@ export const Admin: React.FC = () => {
                     <th className="p-4">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#1E293B] text-slate-300 font-medium">
+                <tbody className={`divide-y font-medium ${
+                  isDarkMode ? "divide-[#1E293B] text-slate-300" : "divide-slate-200 text-slate-700"
+                }`}>
                   {usersMock.map((u, i) => (
-                    <tr key={i} className="hover:bg-white/[0.02]">
-                      <td className="p-4 text-white font-bold">{u.name}</td>
+                    <tr key={i} className={`transition-colors ${isDarkMode ? "hover:bg-white/[0.02]" : "hover:bg-slate-50/50"}`}>
+                      <td className={`p-4 font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>{u.name}</td>
                       <td className="p-4">{u.email}</td>
                       <td className="p-4 uppercase text-[#D4AF37] font-bold">{u.role}</td>
                       <td className="p-4 uppercase">{u.premium} Scholar</td>
@@ -249,8 +269,8 @@ export const Admin: React.FC = () => {
         {activeAdminTab === "analytics" && (
           <div className="space-y-6">
             <div>
-              <h3 className="font-poppins text-xl font-bold text-white">Financial Dashboard & Ingestion Metrics</h3>
-              <p className="text-xs text-slate-400 mt-1">Sourced from sandbox database subscriptions records.</p>
+              <h3 className={`font-poppins text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Financial Dashboard & Ingestion Metrics</h3>
+              <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Sourced from sandbox database subscriptions records.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -259,13 +279,15 @@ export const Admin: React.FC = () => {
                 { label: "Active Subscriptions", value: "112 Students", icon: Users, change: "+8% this week" },
                 { label: "Dossiers Download Volume", value: "1,450 PDFs", icon: Database, change: "99.9% uptime" }
               ].map((metric, idx) => (
-                <div key={idx} className="p-6 bg-[#0B0F19] border border-[#1E293B] rounded-2xl space-y-4">
+                <div key={idx} className={`p-6 border rounded-2xl space-y-4 shadow-sm ${
+                  isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+                }`}>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-slate-400 font-bold uppercase">{metric.label}</span>
                     <metric.icon className="w-5 h-5 text-[#D4AF37]" />
                   </div>
                   <div className="space-y-1">
-                    <span className="block text-2xl font-poppins font-black text-white">{metric.value}</span>
+                    <span className={`block text-2xl font-poppins font-black ${isDarkMode ? "text-white" : "text-slate-800"}`}>{metric.value}</span>
                     <span className="block text-[10px] text-emerald-400 font-semibold">{metric.change}</span>
                   </div>
                 </div>

@@ -8,7 +8,7 @@ import {
 import { useApp } from "../context/AppContext";
 
 export const BareActs: React.FC = () => {
-  const { addBookmark, isBookmarked, removeBookmark } = useApp();
+  const { addBookmark, isBookmarked, removeBookmark, isDarkMode } = useApp();
   
   const [selectedActIndex, setSelectedActIndex] = useState(0);
   const [selectedChapterIndex, setSelectedChapterIndex] = useState(0);
@@ -41,13 +41,15 @@ export const BareActs: React.FC = () => {
     <div id="bare-acts-portal" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
       
       {/* Portal Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b border-[#1E293B] pb-6">
+      <div className={`flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b pb-6 ${
+        isDarkMode ? "border-[#1E293B]" : "border-slate-200"
+      }`}>
         <div>
-          <h1 className="font-poppins text-3xl font-extrabold text-white flex items-center gap-2">
+          <h1 className={`font-poppins text-3xl font-extrabold flex items-center gap-2 ${isDarkMode ? "text-white" : "text-slate-800"}`}>
             <Scale className="w-8 h-8 text-[#D4AF37]" />
             <span>Bare Act <span className="gold-gradient-text">Statute Library</span></span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">Official state legal codes, comparative schedules, and intuitive chapter index tree navigation.</p>
+          <p className={`text-xs sm:text-sm mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>Official state legal codes, comparative schedules, and intuitive chapter index tree navigation.</p>
         </div>
 
         {/* Search */}
@@ -59,7 +61,9 @@ export const BareActs: React.FC = () => {
             placeholder="Search statutes..." 
             value={bareActSearch}
             onChange={(e) => setBareActSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-[#121826] border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs text-white focus:outline-none placeholder-slate-500 transition-colors"
+            className={`w-full pl-9 pr-4 py-2 border rounded-xl text-xs focus:outline-none placeholder-slate-500 transition-colors ${
+              isDarkMode ? "bg-[#121826] border-[#1E293B] text-white focus:border-[#D4AF37]" : "bg-white border-slate-200 text-slate-800 focus:border-[#D4AF37] shadow-sm"
+            }`}
           />
         </div>
       </div>
@@ -71,7 +75,9 @@ export const BareActs: React.FC = () => {
         <div className="lg:col-span-4 space-y-6">
           
           {/* Act Selection List */}
-          <div className="bg-[#121826] border border-[#1E293B] rounded-2xl p-4 space-y-3">
+          <div className={`border rounded-2xl p-4 space-y-3 shadow-sm ${
+            isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+          }`}>
             <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block px-2">Select Statute</span>
             <div className="space-y-1">
               {filteredActsList.map((act, index) => {
@@ -88,8 +94,10 @@ export const BareActs: React.FC = () => {
                     }}
                     className={`w-full text-left px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between ${
                       isSelected 
-                        ? "bg-[#D4AF37] text-[#0B0F19] font-bold" 
-                        : "text-slate-300 hover:bg-white/[0.03]"
+                        ? "bg-[#D4AF37] text-[#0B0F19] font-bold shadow-sm" 
+                        : isDarkMode 
+                          ? "text-slate-300 hover:bg-white/[0.03]" 
+                          : "text-slate-600 hover:bg-slate-50"
                     }`}
                   >
                     <span>{act.shortTitle}</span>
@@ -101,7 +109,9 @@ export const BareActs: React.FC = () => {
           </div>
 
           {/* Chapter Outline Navigation */}
-          <div className="bg-[#121826] border border-[#1E293B] rounded-2xl p-4 space-y-4">
+          <div className={`border rounded-2xl p-4 space-y-4 shadow-sm ${
+            isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+          }`}>
             <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block px-2">Chapter Index</span>
             <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1">
               {activeAct.chapters.map((ch, idx) => (
@@ -114,7 +124,9 @@ export const BareActs: React.FC = () => {
                   className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold block border transition-colors ${
                     selectedChapterIndex === idx 
                       ? "border-[#D4AF37]/50 bg-[#D4AF37]/10 text-[#D4AF37]" 
-                      : "border-slate-800 bg-[#0B0F19] text-slate-400 hover:text-white"
+                      : isDarkMode 
+                        ? "border-slate-800 bg-[#0B0F19] text-slate-400 hover:text-white"
+                        : "border-slate-100 bg-slate-50 text-slate-600 hover:text-slate-900"
                   }`}
                 >
                   <span className="block text-[10px] font-bold uppercase tracking-wide text-slate-500">{ch.number}</span>
@@ -125,7 +137,9 @@ export const BareActs: React.FC = () => {
           </div>
 
           {/* Section Outline Selection */}
-          <div className="bg-[#121826] border border-[#1E293B] rounded-2xl p-4 space-y-4">
+          <div className={`border rounded-2xl p-4 space-y-4 shadow-sm ${
+            isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+          }`}>
             <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block px-2">Sections in Chapter</span>
             <div className="space-y-1 max-h-[220px] overflow-y-auto pr-1">
               {activeChapter.sections.map((sec, idx) => (
@@ -135,7 +149,9 @@ export const BareActs: React.FC = () => {
                   className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center space-x-2 transition-all ${
                     selectedSectionIndex === idx 
                       ? "bg-[#D4AF37]/10 text-[#D4AF37] border-l-2 border-[#D4AF37]" 
-                      : "text-slate-400 hover:text-white"
+                      : isDarkMode 
+                        ? "text-slate-400 hover:text-white" 
+                        : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
                   <CornerDownRight className="w-3.5 h-3.5 flex-shrink-0" />
@@ -152,7 +168,9 @@ export const BareActs: React.FC = () => {
         <div className="lg:col-span-8">
           
           {/* Controls Bar */}
-          <div className="p-4 bg-[#121826] border border-[#1E293B] rounded-t-2xl flex items-center justify-between gap-4">
+          <div className={`p-4 border-t border-x rounded-t-2xl flex items-center justify-between gap-4 ${
+            isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+          }`}>
             <div className="flex items-center space-x-2">
               <span className="text-xs text-slate-400 font-semibold">{activeAct.shortTitle}</span>
               <span className="text-slate-600 text-xs">/</span>
@@ -164,7 +182,9 @@ export const BareActs: React.FC = () => {
               {/* Reading Mode Toggle */}
               <button 
                 onClick={() => setIsReadingLightMode(!isReadingLightMode)}
-                className="p-2 bg-[#0B0F19] hover:bg-white/[0.04] border border-[#1E293B] rounded-lg text-slate-400 hover:text-white transition-colors"
+                className={`p-2 rounded-lg border transition-colors ${
+                  isDarkMode ? "bg-[#0B0F19] hover:bg-white/[0.04] border-[#1E293B] text-slate-400 hover:text-white" : "bg-white hover:bg-slate-100 border-slate-200 text-slate-600 shadow-sm"
+                }`}
                 title="Toggle Reading Canvas Theme"
               >
                 {isReadingLightMode ? <Moon className="w-4 h-4 text-[#D4AF37]" /> : <Sun className="w-4 h-4 text-[#D4AF37]" />}
@@ -173,7 +193,9 @@ export const BareActs: React.FC = () => {
               {/* Bookmark Section Button */}
               <button 
                 onClick={() => handleSectionBookmarkToggle(activeAct.title, activeSection.number, activeSection.title)}
-                className="px-3 py-1.5 bg-[#0B0F19] hover:bg-white/[0.04] border border-[#1E293B] rounded-lg text-xs font-bold text-slate-300 hover:text-white flex items-center space-x-1.5 transition-colors"
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-colors border ${
+                  isDarkMode ? "bg-[#0B0F19] hover:bg-white/[0.04] border-[#1E293B] text-slate-300 hover:text-white" : "bg-white hover:bg-slate-100 border-slate-200 text-slate-600 shadow-sm"
+                }`}
               >
                 <Bookmark className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>Bookmark</span>
@@ -193,16 +215,16 @@ export const BareActs: React.FC = () => {
 
           {/* Active Reading Stage Canvas */}
           <div 
-            className={`p-8 border-x border-b border-[#1E293B] rounded-b-2xl transition-colors duration-300 shadow-xl ${
+            className={`p-8 border-x border-b rounded-b-2xl transition-colors duration-300 shadow-xl ${
               isReadingLightMode 
-                ? "bg-white text-slate-900" 
-                : "bg-[#121826] text-white"
+                ? "bg-white text-slate-900 border-slate-200" 
+                : "bg-[#121826] text-white border-[#1E293B]"
             }`}
           >
             <div className="space-y-6">
               
               {/* Header Titles */}
-              <div className="border-b pb-4 border-slate-700/50">
+              <div className={`border-b pb-4 ${isReadingLightMode ? "border-slate-200" : "border-slate-700/50"}`}>
                 <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest block mb-1">
                   Official Statute Provisions
                 </span>
@@ -221,7 +243,7 @@ export const BareActs: React.FC = () => {
 
               {/* Illustrations section if any */}
               {activeSection.illustration && (
-                <div className={`p-5 rounded-xl border-l-4 border-[#D4AF37] ${isReadingLightMode ? "bg-amber-50 border-amber-400" : "bg-[#0B0F19]/80 border-[#D4AF37]"}`}>
+                <div className={`p-5 rounded-xl border-l-4 ${isReadingLightMode ? "bg-amber-50 border-amber-400" : "bg-[#0B0F19]/80 border-[#D4AF37]"}`}>
                   <span className="block text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">Official Illustrations & Explanatory cases</span>
                   <p className={`text-xs leading-relaxed italic ${isReadingLightMode ? "text-slate-700" : "text-[#F3E5AB]"}`}>
                     {activeSection.illustration}
@@ -233,8 +255,8 @@ export const BareActs: React.FC = () => {
               <div className={`p-4 rounded-xl border flex items-start gap-3.5 ${isReadingLightMode ? "bg-slate-50 border-slate-200" : "bg-[#161F32] border-[#1E293B]"}`}>
                 <HelpCircle className="w-5 h-5 text-[#D4AF37] flex-shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <span className="block text-xs font-bold text-white">Stuck on legal definitions?</span>
-                  <p className="text-[11px] text-slate-400 leading-relaxed">
+                  <span className={`block text-xs font-bold ${isReadingLightMode ? "text-slate-800" : "text-white"}`}>Stuck on legal definitions?</span>
+                  <p className={`text-[11px] leading-relaxed ${isReadingLightMode ? "text-slate-600" : "text-slate-400"}`}>
                     Legal jargon can be difficult. Click the 'Ask AI to Explain' button at the top to have Gemini analyze this section, breaking down elements, penal parameters, exceptions, and key judicial precedents in real time.
                   </p>
                 </div>

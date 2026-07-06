@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { CASE_LAWS, BARE_ACTS, UNIVERSITIES } from "../data/legalData";
 import { Search, Scale, Award, GraduationCap, Clipboard } from "lucide-react";
+import { useApp } from "../context/AppContext";
 
 export const SearchResults: React.FC = () => {
+  const { isDarkMode } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
   
@@ -65,22 +67,26 @@ export const SearchResults: React.FC = () => {
           placeholder="Search universities, case laws, bare acts sections, syllabus..." 
           value={localQuery}
           onChange={(e) => setLocalQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-3.5 bg-[#121826] border-2 border-[#1E293B] focus:border-[#D4AF37] rounded-2xl text-xs sm:text-sm text-white focus:outline-none placeholder-slate-500 transition-colors"
+          className={`w-full pl-12 pr-4 py-3.5 border-2 rounded-2xl text-xs sm:text-sm focus:outline-none placeholder-slate-500 transition-colors ${
+            isDarkMode ? "bg-[#121826] border-[#1E293B] focus:border-[#D4AF37] text-white" : "bg-white border-slate-200 focus:border-[#D4AF37] text-slate-800 shadow-sm"
+          }`}
         />
       </form>
 
       {/* Meta headers */}
-      <div className="border-b border-[#1E293B] pb-4">
-        <h1 className="font-poppins text-xl sm:text-2xl font-black text-white">
+      <div className={`border-b pb-4 ${isDarkMode ? "border-[#1E293B]" : "border-slate-100"}`}>
+        <h1 className={`font-poppins text-xl sm:text-2xl font-black ${isDarkMode ? "text-white" : "text-slate-800"}`}>
           Search Results for <span className="text-[#D4AF37]">"{query}"</span>
         </h1>
         <p className="text-xs text-slate-500 mt-1">Found {totalCount} total reference entries in LawBuddy database.</p>
       </div>
 
       {totalCount === 0 ? (
-        <div className="text-center py-16 bg-[#121826] border border-dashed border-[#1E293B] rounded-2xl">
+        <div className={`text-center py-16 border border-dashed rounded-2xl ${
+          isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200 shadow-sm"
+        }`}>
           <Clipboard className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <h4 className="font-poppins text-base font-bold text-white mb-1">No matching resources found</h4>
+          <h4 className={`font-poppins text-base font-bold mb-1 ${isDarkMode ? "text-white" : "text-slate-800"}`}>No matching resources found</h4>
           <p className="text-xs text-slate-400">Try modifying your query tags or consult our LawBuddy AI assistant.</p>
         </div>
       ) : (
@@ -99,14 +105,18 @@ export const SearchResults: React.FC = () => {
 
                 <div className="space-y-3">
                   {matchingCases.map((c) => (
-                    <div key={c.id} className="p-5 bg-[#121826] border border-[#1E293B] rounded-xl flex items-center justify-between gap-4">
+                    <div key={c.id} className={`p-5 border rounded-xl flex items-center justify-between gap-4 shadow-sm ${
+                      isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-100"
+                    }`}>
                       <div className="space-y-1">
                         <span className="text-[10px] text-[#D4AF37] font-bold">{c.citation}</span>
-                        <h4 className="text-xs sm:text-sm font-bold text-white">{c.title}</h4>
+                        <h4 className={`text-xs sm:text-sm font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>{c.title}</h4>
                       </div>
                       <Link 
                         to="/case-laws" 
-                        className="px-3 py-1.5 bg-[#0B0F19] border border-[#1E293B] text-slate-300 hover:text-white rounded-lg text-xs font-semibold"
+                        className={`px-3 py-1.5 border rounded-lg text-xs font-semibold ${
+                          isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-slate-300 hover:text-white" : "bg-white border-slate-200 text-slate-600 hover:text-slate-800 shadow-sm"
+                        }`}
                       >
                         Open Dossier
                       </Link>
@@ -126,15 +136,19 @@ export const SearchResults: React.FC = () => {
 
                 <div className="space-y-3">
                   {matchingActs.map((act, i) => (
-                    <div key={i} className="p-5 bg-[#121826] border border-[#1E293B] rounded-xl flex items-center justify-between gap-4">
+                    <div key={i} className={`p-5 border rounded-xl flex items-center justify-between gap-4 shadow-sm ${
+                      isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-100"
+                    }`}>
                       <div className="space-y-1">
                         <span className="text-[10px] text-slate-500 font-bold uppercase">{act.actTitle}</span>
-                        <h4 className="text-xs sm:text-sm font-bold text-white">{act.sectionNumber}: {act.sectionTitle}</h4>
-                        <p className="text-[11px] text-slate-400 line-clamp-1">{act.content}</p>
+                        <h4 className={`text-xs sm:text-sm font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>{act.sectionNumber}: {act.sectionTitle}</h4>
+                        <p className={`text-[11px] line-clamp-1 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>{act.content}</p>
                       </div>
                       <Link 
                         to="/bare-acts" 
-                        className="px-3 py-1.5 bg-[#0B0F19] border border-[#1E293B] text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex-shrink-0"
+                        className={`px-3 py-1.5 border rounded-lg text-xs font-semibold flex-shrink-0 ${
+                          isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-slate-300 hover:text-white" : "bg-white border-slate-200 text-slate-600 hover:text-slate-800 shadow-sm"
+                        }`}
                       >
                         Read Statute
                       </Link>
@@ -154,14 +168,18 @@ export const SearchResults: React.FC = () => {
 
                 <div className="space-y-3">
                   {matchingUnis.map((u) => (
-                    <div key={u.id} className="p-5 bg-[#121826] border border-[#1E293B] rounded-xl flex items-center justify-between gap-4">
+                    <div key={u.id} className={`p-5 border rounded-xl flex items-center justify-between gap-4 shadow-sm ${
+                      isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-100"
+                    }`}>
                       <div className="space-y-1">
-                        <h4 className="text-xs sm:text-sm font-bold text-white">{u.name}</h4>
+                        <h4 className={`text-xs sm:text-sm font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>{u.name}</h4>
                         <span className="text-[10px] text-[#D4AF37] font-semibold">{u.location}</span>
                       </div>
                       <Link 
                         to={`/university/${u.id}`} 
-                        className="px-3 py-1.5 bg-[#0B0F19] border border-[#1E293B] text-slate-300 hover:text-white rounded-lg text-xs font-semibold"
+                        className={`px-3 py-1.5 border rounded-lg text-xs font-semibold ${
+                          isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-slate-300 hover:text-white" : "bg-white border-slate-200 text-slate-600 hover:text-slate-800 shadow-sm"
+                        }`}
                       >
                         Enter Dashboard
                       </Link>
@@ -174,11 +192,13 @@ export const SearchResults: React.FC = () => {
           </div>
 
           {/* Right column context tips */}
-          <div className="lg:col-span-4 bg-[#121826] border border-[#1E293B] rounded-2xl p-6 space-y-4">
+          <div className={`border rounded-2xl p-6 space-y-4 shadow-sm ${
+            isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+          }`}>
             <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Search Tips</span>
             <ul className="space-y-3.5 text-xs text-slate-400 leading-relaxed font-medium list-disc pl-4">
-              <li>Use official citation numbers like <strong className="text-white">"2014"</strong> or <strong className="text-white">"1973"</strong> for landmark cases.</li>
-              <li>Input specific section names e.g., <strong className="text-white">"Article 21"</strong>, <strong className="text-white">"Section 100"</strong> for exact bare acts highlights.</li>
+              <li>Use official citation numbers like <strong className={isDarkMode ? "text-white" : "text-slate-800"}>"2014"</strong> or <strong className={isDarkMode ? "text-white" : "text-slate-800"}>"1973"</strong> for landmark cases.</li>
+              <li>Input specific section names e.g., <strong className={isDarkMode ? "text-white" : "text-slate-800"}>"Article 21"</strong>, <strong className={isDarkMode ? "text-white" : "text-slate-800"}>"Section 100"</strong> for exact bare acts highlights.</li>
               <li>Filter matches by switching to dedicated tabs inside layout headers if needed.</li>
             </ul>
           </div>

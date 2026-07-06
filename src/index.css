@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+:root {
+  --color-luxury-dark: #F8FAFC;
+  --color-luxury-card: #FFFFFF;
+  --color-luxury-border: #E2E8F0;
+  --color-luxury-text: #0F172A;
+  --color-luxury-muted: #475569;
+}
+
+html.dark {
+  --color-luxury-dark: #0B0F19;
+  --color-luxury-card: #121826;
+  --color-luxury-border: #1E293B;
+  --color-luxury-text: #F8FAFC;
+  --color-luxury-muted: #94A3B8;
+}
+
 @theme {
   --font-sans: "Inter", "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-poppins: "Poppins", "Inter", sans-serif;
@@ -7,17 +23,29 @@
   
   --color-gold: #D4AF37;
   --color-gold-hover: #C5A028;
-  --color-luxury-dark: #0B0F19;
-  --color-luxury-card: #121826;
-  --color-luxury-border: #1E293B;
+  --color-luxury-dark: var(--color-luxury-dark);
+  --color-luxury-card: var(--color-luxury-card);
+  --color-luxury-border: var(--color-luxury-border);
+  --color-luxury-text: var(--color-luxury-text);
+  --color-luxury-muted: var(--color-luxury-muted);
 }
 
 @layer base {
   body {
     font-family: var(--font-sans);
     background-color: var(--color-luxury-dark);
-    color: #F8FAFC;
+    color: var(--color-luxury-text);
     scroll-behavior: smooth;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Base Typography Elements to ensure explicit, high-contrast light mode colors */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-luxury-text);
+  }
+
+  p, label, li {
+    color: var(--color-luxury-muted);
   }
 }
 
@@ -27,6 +55,14 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(212, 175, 55, 0.15);
+  color: #F8FAFC;
+}
+
+html:not(.dark) .glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(212, 175, 55, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  color: #0F172A;
 }
 
 .glass-panel-hover {
@@ -40,10 +76,32 @@
   transform: translateY(-2px);
 }
 
+html:not(.dark) .glass-panel-hover:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.1);
+}
+
 .gold-gradient-text {
-  background: linear-gradient(135deg, #FFF 0%, #D4AF37 50%, #F3E5AB 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(135deg, #FFF 0%, #D4AF37 50%, #F3E5AB 100%);
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  display: inline-block;
+  transition: none !important;
+  -webkit-transition: none !important;
+}
+
+html:not(.dark) .gold-gradient-text {
+  background-image: linear-gradient(135deg, #1E293B 0%, #B8860B 50%, #785A00 100%);
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  display: inline-block;
+  transition: none !important;
+  -webkit-transition: none !important;
 }
 
 .gold-glow {
@@ -78,11 +136,26 @@
   background: linear-gradient(135deg, #1A1F2E 0%, #0B0F19 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  color: #F8FAFC;
+}
+
+html:not(.dark) .sophisticated-card {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  color: #0F172A;
 }
 
 .sophisticated-inner-card {
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #CBD5E1;
+}
+
+html:not(.dark) .sophisticated-inner-card {
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  color: #334155;
 }
 
 .sophisticated-gold-glow {
@@ -96,8 +169,32 @@
 }
 
 .sophisticated-gradient-text {
-  background: linear-gradient(to right, #FFFFFF, #D4AF37, #D4AF37);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right, #FFFFFF, #D4AF37, #D4AF37);
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  display: inline-block;
+  transition: none !important;
+  -webkit-transition: none !important;
+}
+
+html:not(.dark) .sophisticated-gradient-text {
+  background-image: linear-gradient(to right, #1E293B, #B8860B, #785A00);
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  display: inline-block;
+  transition: none !important;
+  -webkit-transition: none !important;
+}
+
+.hero-gradient-bg {
+  background-image: radial-gradient(circle at center, rgba(212, 175, 55, 0.07) 0%, transparent 70%);
+}
+
+html:not(.dark) .hero-gradient-bg {
+  background-image: radial-gradient(circle at center, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
 }
 

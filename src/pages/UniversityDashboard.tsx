@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from "motion/react";
 
 export const UniversityDashboard: React.FC = () => {
   const { universityId } = useParams<{ universityId: string }>();
-  const { addBookmark, isBookmarked, removeBookmark, recordDownload, currentUser } = useApp();
+  const { addBookmark, isBookmarked, removeBookmark, recordDownload, currentUser, isDarkMode } = useApp();
   
   const university = UNIVERSITIES.find((u) => u.id === universityId) || UNIVERSITIES[0];
   const totalSemesters = university.semesters;
@@ -85,7 +85,9 @@ export const UniversityDashboard: React.FC = () => {
       </Link>
 
       {/* Hero Header */}
-      <div className="p-8 rounded-3xl bg-[#121826] border border-[#1E293B] relative overflow-hidden shadow-xl">
+      <div className={`p-8 rounded-3xl border relative overflow-hidden shadow-xl ${
+        isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+      }`}>
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#D4AF37]/5 to-transparent pointer-events-none rounded-full" />
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
           <div className="space-y-3">
@@ -93,17 +95,19 @@ export const UniversityDashboard: React.FC = () => {
               <span className="bg-[#D4AF37]/10 border border-[#D4AF37]/35 text-[#D4AF37] text-xs font-bold px-3 py-1 rounded-full uppercase">
                 {university.shortName}
               </span>
-              <span className="text-slate-500 text-xs font-semibold">{university.location}</span>
+              <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>{university.location}</span>
             </div>
-            <h1 className="font-poppins text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">
+            <h1 className={`font-poppins text-2xl sm:text-3xl md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
               {university.name}
             </h1>
-            <p className="text-slate-400 text-xs sm:text-sm max-w-3xl leading-relaxed">
+            <p className={`text-xs sm:text-sm max-w-3xl leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
               {university.description}
             </p>
           </div>
           
-          <div className="px-6 py-4 rounded-xl bg-[#0B0F19] border border-[#1E293B] text-center flex-shrink-0">
+          <div className={`px-6 py-4 rounded-xl border text-center flex-shrink-0 ${
+            isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+          }`}>
             <span className="block text-[#D4AF37] text-3xl font-extrabold">{totalSemesters}</span>
             <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Semesters Mapped</span>
           </div>
@@ -111,7 +115,7 @@ export const UniversityDashboard: React.FC = () => {
       </div>
 
       {/* SEMESTER TABS */}
-      <div className="flex flex-wrap gap-2 border-b border-[#1E293B] pb-4">
+      <div className={`flex flex-wrap gap-2 border-b pb-4 ${isDarkMode ? "border-[#1E293B]" : "border-slate-200"}`}>
         {Array.from({ length: totalSemesters }).map((_, i) => {
           const semNum = i + 1;
           const isSelected = selectedSemester === semNum;
@@ -125,7 +129,7 @@ export const UniversityDashboard: React.FC = () => {
               className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
                 isSelected 
                   ? "bg-[#D4AF37] text-[#0B0F19] font-bold shadow-[0_4px_12px_rgba(212,175,55,0.25)]" 
-                  : "bg-[#121826] text-slate-300 hover:text-white border border-[#1E293B]"
+                  : (isDarkMode ? "bg-[#121826] text-slate-300 hover:text-white border border-[#1E293B]" : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200 shadow-sm")
               }`}
             >
               Semester {semNum}
@@ -154,7 +158,7 @@ export const UniversityDashboard: React.FC = () => {
                 className={`w-full text-left p-4 rounded-xl border flex items-center space-x-4 transition-all duration-300 ${
                   isTabActive
                     ? "bg-[#D4AF37]/10 border-[#D4AF37] text-[#D4AF37]"
-                    : "bg-[#121826] border-[#1E293B] hover:border-slate-700 text-slate-300 hover:text-white"
+                    : (isDarkMode ? "bg-[#121826] border-[#1E293B] hover:border-slate-700 text-slate-300 hover:text-white" : "bg-white border-slate-200 hover:border-[#D4AF37]/40 text-slate-600 hover:text-slate-900 shadow-sm")
                 }`}
               >
                 <tab.icon className="w-5 h-5 flex-shrink-0" />
@@ -176,29 +180,35 @@ export const UniversityDashboard: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="bg-[#121826] border border-[#1E293B] rounded-2xl p-6 sm:p-8 space-y-6 shadow-md"
+              className={`border rounded-2xl p-6 sm:p-8 space-y-6 shadow-md ${
+                isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+              }`}
             >
               
               {/* TAB 1: SUBJECTS */}
               {activeTab === "subjects" && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-poppins text-xl font-bold text-white">Semester {selectedSemester} Core Subjects</h3>
-                    <p className="text-xs text-slate-400 mt-1">Select a subject below to explore detailed syllabus guidelines and curated mock answers.</p>
+                    <h3 className={`font-poppins text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Semester {selectedSemester} Core Subjects</h3>
+                    <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>Select a subject below to explore detailed syllabus guidelines and curated mock answers.</p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {currentSubjects.map((sub) => (
                       <Link 
                         key={sub.id} 
                         to={`/subject/${sub.id}`}
-                        className="p-5 bg-[#0B0F19] border border-[#1E293B] hover:border-[#D4AF37]/45 rounded-xl hover:shadow-lg transition-all group flex flex-col justify-between"
+                        className={`p-5 border hover:border-[#D4AF37]/45 rounded-xl hover:shadow-lg transition-all group flex flex-col justify-between ${
+                          isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+                        }`}
                       >
                         <div className="space-y-2">
                           <BookOpen className="w-6 h-6 text-[#D4AF37]" />
-                          <h4 className="font-poppins text-base font-bold text-white group-hover:text-[#D4AF37] transition-colors">{sub.name}</h4>
+                          <h4 className={`font-poppins text-base font-bold group-hover:text-[#D4AF37] transition-colors ${isDarkMode ? "text-white" : "text-slate-800"}`}>{sub.name}</h4>
                           <span className="text-[10px] text-slate-500 font-bold block uppercase">{sub.notesCount} topic modules available</span>
                         </div>
-                        <div className="mt-4 pt-3 border-t border-[#1E293B] flex items-center justify-between text-xs font-semibold text-slate-400">
+                        <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs font-semibold ${
+                          isDarkMode ? "border-[#1E293B] text-slate-400" : "border-slate-100 text-slate-500"
+                        }`}>
                           <span>Explore Subject</span>
                           <span className="group-hover:translate-x-1 transition-transform">→</span>
                         </div>
@@ -212,23 +222,27 @@ export const UniversityDashboard: React.FC = () => {
               {activeTab === "notes" && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-poppins text-xl font-bold text-white">Study Notes for Semester {selectedSemester}</h3>
-                    <p className="text-xs text-slate-400 mt-1">Review top-grade notes prepared by leading academic legal scholars.</p>
+                    <h3 className={`font-poppins text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Study Notes for Semester {selectedSemester}</h3>
+                    <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>Review top-grade notes prepared by leading academic legal scholars.</p>
                   </div>
                   <div className="space-y-4">
                     {currentSubjects.flatMap((sub) => {
                       const topics = SUBJECT_TOPICS[sub.id]?.notes || ["General Introduction Notes", "Model Revision Guides"];
                       return topics.map((t, index) => (
-                        <div key={`${sub.id}-${index}`} className="p-4 bg-[#0B0F19] border border-[#1E293B] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div key={`${sub.id}-${index}`} className={`p-4 border rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                          isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+                        }`}>
                           <div className="space-y-1">
                             <span className="text-[10px] text-[#D4AF37] font-semibold uppercase">{sub.name}</span>
-                            <h4 className="text-sm font-bold text-white leading-snug">{t}</h4>
+                            <h4 className={`text-sm font-bold leading-snug ${isDarkMode ? "text-white" : "text-slate-800"}`}>{t}</h4>
                             <span className="text-[10px] text-slate-500 block">Contributor: LawBuddy Advisory • 5 min read</span>
                           </div>
                           <div className="flex gap-2">
                             <button 
                               onClick={() => triggerPdfPreview(t, `Syllabus Note: ${sub.name}`, 'notes')}
-                              className="px-3.5 py-2 bg-[#121826] text-slate-300 hover:text-white rounded-lg border border-[#1E293B] text-xs font-semibold flex items-center space-x-1"
+                              className={`px-3.5 py-2 rounded-lg border text-xs font-semibold flex items-center space-x-1 ${
+                                isDarkMode ? "bg-[#121826] text-slate-300 hover:text-white border-[#1E293B]" : "bg-white text-slate-600 hover:text-slate-900 border-slate-200 shadow-sm"
+                              }`}
                             >
                               <Eye className="w-3.5 h-3.5" />
                               <span>Preview</span>
@@ -252,22 +266,26 @@ export const UniversityDashboard: React.FC = () => {
               {activeTab === "papers" && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-poppins text-xl font-bold text-white">Previous Year Question Papers</h3>
-                    <p className="text-xs text-slate-400 mt-1">Practice with real examination papers distributed during previous academic semesters.</p>
+                    <h3 className={`font-poppins text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Previous Year Question Papers</h3>
+                    <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>Practice with real examination papers distributed during previous academic semesters.</p>
                   </div>
                   <div className="space-y-4">
                     {[2024, 2023, 2022].map((year) => (
                       currentSubjects.map((sub) => (
-                        <div key={`${sub.id}-${year}`} className="p-4 bg-[#0B0F19] border border-[#1E293B] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div key={`${sub.id}-${year}`} className={`p-4 border rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                          isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+                        }`}>
                           <div className="space-y-1">
                             <span className="text-[10px] text-emerald-500 font-bold uppercase">{year} Annual Examination</span>
-                            <h4 className="text-sm font-bold text-white leading-snug">{sub.name} - End Term Paper</h4>
+                            <h4 className={`text-sm font-bold leading-snug ${isDarkMode ? "text-white" : "text-slate-800"}`}>{sub.name} - End Term Paper</h4>
                             <span className="text-[10px] text-slate-500 block">{university.shortName} official paper • 100 Marks</span>
                           </div>
                           <div className="flex gap-2">
                             <button 
                               onClick={() => triggerPdfPreview(`${sub.name} Paper (${year})`, `${university.shortName} Endterm`, 'paper')}
-                              className="px-3 py-2 bg-[#121826] text-slate-300 hover:text-white rounded-lg border border-[#1E293B] text-xs font-semibold flex items-center space-x-1"
+                              className={`px-3 py-2 rounded-lg border text-xs font-semibold flex items-center space-x-1 ${
+                                isDarkMode ? "bg-[#121826] text-slate-300 hover:text-white border-[#1E293B]" : "bg-white text-slate-600 hover:text-slate-900 border-slate-200 shadow-sm"
+                              }`}
                             >
                               <Eye className="w-3.5 h-3.5" />
                               <span>Preview</span>
@@ -291,27 +309,31 @@ export const UniversityDashboard: React.FC = () => {
               {activeTab === "cases" && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-poppins text-xl font-bold text-white">Mandatory Case Laws for Semester {selectedSemester}</h3>
-                    <p className="text-xs text-slate-400 mt-1">Read landmark judicial precedents relevant to your current syllabus.</p>
+                    <h3 className={`font-poppins text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Mandatory Case Laws for Semester {selectedSemester}</h3>
+                    <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>Read landmark judicial precedents relevant to your current syllabus.</p>
                   </div>
                   <div className="space-y-4">
                     {CASE_LAWS.map((caseObj) => (
-                      <div key={caseObj.id} className="p-5 bg-[#0B0F19] border border-[#1E293B] rounded-xl space-y-3">
+                      <div key={caseObj.id} className={`p-5 border rounded-xl space-y-3 ${
+                        isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+                      }`}>
                         <div className="flex items-start justify-between">
                           <div className="space-y-1">
                             <span className="text-[10px] text-[#D4AF37] font-bold block">{caseObj.citation}</span>
-                            <h4 className="text-base font-bold text-white">{caseObj.title}</h4>
+                            <h4 className={`text-base font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>{caseObj.title}</h4>
                             <span className="text-xs text-slate-500">{caseObj.court}</span>
                           </div>
                           <Link 
                             to="/case-laws" 
-                            className="px-3 py-1.5 bg-[#121826] text-slate-300 hover:text-white border border-[#1E293B] rounded-lg text-xs font-semibold"
+                            className={`px-3 py-1.5 border rounded-lg text-xs font-semibold ${
+                              isDarkMode ? "bg-[#121826] text-slate-300 hover:text-white border-[#1E293B]" : "bg-white text-slate-600 hover:text-slate-900 border-slate-200 shadow-sm"
+                            }`}
                           >
                             Explore Analysis
                           </Link>
                         </div>
-                        <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">{caseObj.facts}</p>
-                        <div className="p-3 bg-[#121826] border-l-2 border-[#D4AF37] rounded-r-lg">
+                        <p className={`text-xs line-clamp-3 leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>{caseObj.facts}</p>
+                        <div className={`p-3 border-l-2 border-[#D4AF37] rounded-r-lg ${isDarkMode ? "bg-[#121826]" : "bg-white border-slate-200 shadow-inner"}`}>
                           <span className="block text-[10px] text-slate-500 uppercase font-bold">Legal Ratio Decidendi</span>
                           <p className="text-xs text-[#D4AF37] italic font-medium leading-relaxed mt-0.5">{caseObj.ratio}</p>
                         </div>
@@ -325,21 +347,25 @@ export const UniversityDashboard: React.FC = () => {
               {activeTab === "assignments" && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-poppins text-xl font-bold text-white">Semester Sample Assignments & Prompts</h3>
-                    <p className="text-xs text-slate-400 mt-1">Mock research paper questions and reference analysis reports to help you score high grades.</p>
+                    <h3 className={`font-poppins text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Semester Sample Assignments & Prompts</h3>
+                    <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>Mock research paper questions and reference analysis reports to help you score high grades.</p>
                   </div>
                   <div className="space-y-4">
                     {currentSubjects.map((sub, index) => (
-                      <div key={`assign-${sub.id}`} className="p-4 bg-[#0B0F19] border border-[#1E293B] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div key={`assign-${sub.id}`} className={`p-4 border rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                        isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+                      }`}>
                         <div className="space-y-1">
                           <span className="text-[10px] text-purple-400 font-bold uppercase">Topic Research Task</span>
-                          <h4 className="text-sm font-bold text-white leading-snug">Critique paper on {sub.name} applications in corporate fields</h4>
+                          <h4 className={`text-sm font-bold leading-snug ${isDarkMode ? "text-white" : "text-slate-800"}`}>Critique paper on {sub.name} applications in corporate fields</h4>
                           <span className="text-[10px] text-slate-500 block">Suggested length: 2,500 words • Citation: Bluebook format</span>
                         </div>
                         <div className="flex gap-2">
                           <button 
                             onClick={() => triggerPdfPreview(`Research Prompt - ${sub.name}`, "Suggested Outline Document", 'assignment')}
-                            className="px-3.5 py-2 bg-[#121826] text-slate-300 hover:text-white rounded-lg border border-[#1E293B] text-xs font-semibold flex items-center space-x-1"
+                            className={`px-3.5 py-2 rounded-lg border text-xs font-semibold flex items-center space-x-1 ${
+                              isDarkMode ? "bg-[#121826] text-slate-300 hover:text-white border-[#1E293B]" : "bg-white text-slate-600 hover:text-slate-900 border-slate-200 shadow-sm"
+                            }`}
                           >
                             <Eye className="w-3.5 h-3.5" />
                             <span>Preview</span>
@@ -371,20 +397,28 @@ export const UniversityDashboard: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#0B0F19]/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
+            className={`fixed inset-0 z-50 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto ${
+              isDarkMode ? "bg-[#0B0F19]/95" : "bg-slate-900/80"
+            }`}
           >
-            <div className="w-full max-w-4xl bg-[#121826] border border-[#D4AF37]/35 rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[90vh]">
+            <div className={`w-full max-w-4xl border rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[90vh] ${
+              isDarkMode ? "bg-[#121826] border-[#D4AF37]/35" : "bg-white border-slate-300"
+            }`}>
               
               {/* PDF Header Controls */}
-              <div className="p-4 bg-[#0B0F19] border-b border-[#1E293B] flex flex-wrap items-center justify-between gap-4">
+              <div className={`p-4 border-b flex flex-wrap items-center justify-between gap-4 ${
+                isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+              }`}>
                 <div>
-                  <h4 className="font-poppins text-sm md:text-base font-bold text-white">{pdfPreview.title}</h4>
-                  <span className="text-[10px] text-slate-400 font-semibold">{pdfPreview.subtitle}</span>
+                  <h4 className={`font-poppins text-sm md:text-base font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>{pdfPreview.title}</h4>
+                  <span className={`text-[10px] font-semibold ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{pdfPreview.subtitle}</span>
                 </div>
                 
                 <div className="flex items-center space-x-2">
                   {/* Zoom Controls */}
-                  <div className="flex items-center bg-[#121826] border border-[#1E293B] rounded-lg px-2.5 py-1">
+                  <div className={`flex items-center rounded-lg px-2.5 py-1 border ${
+                    isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200 shadow-sm"
+                  }`}>
                     <button 
                       onClick={() => setZoomLevel((prev) => Math.max(50, prev - 10))}
                       className="p-1 hover:text-[#D4AF37] text-slate-400"
@@ -392,7 +426,7 @@ export const UniversityDashboard: React.FC = () => {
                     >
                       <ZoomOut className="w-4 h-4" />
                     </button>
-                    <span className="text-xs text-white font-mono px-2 min-w-[40px] text-center">{zoomLevel}%</span>
+                    <span className={`text-xs font-mono px-2 min-w-[40px] text-center ${isDarkMode ? "text-white" : "text-slate-800"}`}>{zoomLevel}%</span>
                     <button 
                       onClick={() => setZoomLevel((prev) => Math.min(200, prev + 10))}
                       className="p-1 hover:text-[#D4AF37] text-slate-400"
@@ -404,7 +438,9 @@ export const UniversityDashboard: React.FC = () => {
 
                   <button 
                     onClick={() => handleShare(pdfPreview.title)}
-                    className="p-2 bg-[#121826] hover:bg-white/[0.05] border border-[#1E293B] rounded-lg text-slate-300 hover:text-white"
+                    className={`p-2 rounded-lg border ${
+                      isDarkMode ? "bg-[#121826] hover:bg-white/[0.05] border-[#1E293B] text-slate-300 hover:text-white" : "bg-white hover:bg-slate-100 border-slate-200 text-slate-600 shadow-sm"
+                    }`}
                     title="Share Link"
                   >
                     <Share2 className="w-4 h-4" />
@@ -428,7 +464,7 @@ export const UniversityDashboard: React.FC = () => {
               </div>
 
               {/* PDF Content Stage */}
-              <div className="flex-1 overflow-y-auto p-6 md:p-12 bg-slate-900/60 flex justify-center">
+              <div className={`flex-1 overflow-y-auto p-6 md:p-12 flex justify-center ${isDarkMode ? "bg-slate-900/60" : "bg-slate-100"}`}>
                 <div 
                   className="bg-white text-slate-950 p-8 md:p-12 rounded-lg shadow-xl max-w-2xl w-full border border-slate-300 font-sans leading-relaxed selection:bg-[#D4AF37]/40 transition-all duration-200"
                   style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: "top center" }}

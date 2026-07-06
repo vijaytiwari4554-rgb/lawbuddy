@@ -10,6 +10,7 @@ import { useApp } from "../context/AppContext";
 import { auth } from "../firebase/config";
 import { signOut } from "firebase/auth";
 import { motion, AnimatePresence } from "motion/react";
+import { FloatingAIAssistant } from "../components/FloatingAIAssistant";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -88,7 +89,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         id="navbar-header" 
         className={`sticky top-0 z-40 w-full border-b transition-all duration-300 ${
           isScrolled 
-            ? "border-white/10 bg-[#0B0F19]/90 backdrop-blur-md shadow-lg shadow-[#D4AF37]/5" 
+            ? isDarkMode 
+              ? "border-white/10 bg-[#0B0F19]/90 backdrop-blur-md shadow-lg shadow-[#D4AF37]/5" 
+              : "border-slate-200 bg-white/95 backdrop-blur-md shadow-md shadow-black/5"
             : "border-transparent bg-transparent"
         }`}
       >
@@ -98,15 +101,15 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Logo (Universal) */}
             <Link id="navbar-logo" to="/" className="flex items-center space-x-3 group flex-shrink-0">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F3E5AB] to-[#D4AF37] p-[1.5px] transition-transform duration-300 group-hover:scale-105">
-                <div className="w-full h-full rounded-[10px] bg-[#0B0F19] flex items-center justify-center">
+                <div className={`w-full h-full rounded-[10px] flex items-center justify-center ${isDarkMode ? "bg-[#0B0F19]" : "bg-white"}`}>
                   <Scale className="w-5 h-5 text-[#D4AF37]" />
                 </div>
               </div>
               <div className="flex flex-col">
-                <span className="font-poppins text-xl font-bold tracking-tight text-white group-hover:text-[#D4AF37] transition-colors duration-200">
+                <span className={`font-poppins text-xl font-bold tracking-tight group-hover:text-[#D4AF37] transition-colors duration-200 ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>
                   Law<span className="text-[#D4AF37]">Buddy</span>
                 </span>
-                <span className="text-[9px] tracking-wider text-slate-400 font-medium uppercase -mt-1 hidden sm:block">
+                <span className={`text-[9px] tracking-wider font-medium uppercase -mt-1 hidden sm:block ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
                   India's Legal Learning Platform
                 </span>
               </div>
@@ -116,13 +119,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="hidden lg:flex items-center space-x-6 flex-1 justify-center px-6">
               {/* Desktop Large Search Bar */}
               <form onSubmit={handleSearchSubmit} className="relative max-w-xs w-full">
-                <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400 pointer-events-none" />
+                <Search className={`absolute left-3 top-2.5 w-4 h-4 pointer-events-none ${isDarkMode ? "text-slate-400" : "text-slate-500"}`} />
                 <input
                   type="text"
                   placeholder="Search topics, notes..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-[#121826]/75 border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs text-white focus:outline-none placeholder-slate-500 transition-colors"
+                  className={`w-full pl-9 pr-4 py-2 focus:border-[#D4AF37] rounded-xl text-xs focus:outline-none transition-colors ${
+                    isDarkMode 
+                      ? "bg-[#121826]/75 border border-[#1E293B] text-white placeholder-slate-500" 
+                      : "bg-slate-100 border border-slate-200 text-slate-900 placeholder-slate-400"
+                  }`}
                 />
               </form>
 
@@ -137,7 +144,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                       className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
                         isActive 
                           ? "text-[#D4AF37] bg-white/[0.04] border border-[#D4AF37]/20" 
-                          : "text-slate-300 hover:text-white hover:bg-white/[0.02]"
+                          : isDarkMode 
+                            ? "text-slate-300 hover:text-white hover:bg-white/[0.02]" 
+                            : "text-slate-600 hover:text-[#0B0F19] hover:bg-slate-100"
                       }`}
                     >
                       {link.name}
@@ -154,7 +163,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <button 
                 id="search-toggle-btn"
                 onClick={() => setIsSearchOpen(true)}
-                className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.05] transition-colors"
+                className={`p-2 rounded-lg transition-colors ${isDarkMode ? "text-slate-300 hover:text-white hover:bg-white/[0.05]" : "text-slate-600 hover:text-[#0B0F19] hover:bg-slate-100"}`}
                 title="Search everything"
               >
                 <Search className="w-5 h-5" />
@@ -164,10 +173,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <button 
                 id="darkmode-toggle-btn"
                 onClick={toggleDarkMode}
-                className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.05] transition-colors"
+                className={`p-2 rounded-lg transition-colors ${isDarkMode ? "text-slate-300 hover:text-white hover:bg-white/[0.05]" : "text-slate-600 hover:text-[#0B0F19] hover:bg-slate-100"}`}
                 title="Toggle Mode"
               >
-                {isDarkMode ? <Sun className="w-5 h-5 text-[#D4AF37]" /> : <Moon className="w-5 h-5 text-slate-300" />}
+                {isDarkMode ? <Sun className="w-5 h-5 text-[#D4AF37]" /> : <Moon className="w-5 h-5 text-slate-500" />}
               </button>
 
               {/* USER PROFILE / COMPACT LOGIN ICON (Universal) */}
@@ -175,7 +184,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link 
                   id="user-dashboard-link"
                   to="/profile" 
-                  className="p-1.5 rounded-full bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/40 transition-all duration-300 flex items-center justify-center"
+                  className={`p-1.5 rounded-full transition-all duration-300 flex items-center justify-center ${
+                    isDarkMode 
+                      ? "bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/40" 
+                      : "bg-slate-100 border border-slate-200 hover:border-[#D4AF37]/40"
+                  }`}
                   title="My Student Dashboard"
                 >
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] flex items-center justify-center text-[#0B0F19] font-bold text-xs overflow-hidden">
@@ -190,7 +203,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link 
                   id="navbar-login-btn"
                   to="/login" 
-                  className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.05] transition-all flex items-center justify-center"
+                  className={`p-2 rounded-lg transition-all flex items-center justify-center ${isDarkMode ? "text-slate-300 hover:text-white hover:bg-white/[0.05]" : "text-slate-600 hover:text-[#0B0F19] hover:bg-slate-100"}`}
                   title="Login to Account"
                 >
                   <User className="w-5 h-5" />
@@ -201,7 +214,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <button
                 id="mobile-menu-btn"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.05] transition-colors"
+                className={`lg:hidden p-2 rounded-lg transition-colors ${isDarkMode ? "text-slate-300 hover:text-white hover:bg-white/[0.05]" : "text-slate-600 hover:text-[#0B0F19] hover:bg-slate-100"}`}
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -231,23 +244,27 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] z-50 bg-[#0B0F19] border-r border-white/10 shadow-2xl flex flex-col lg:hidden"
+              className={`fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] z-50 shadow-2xl flex flex-col lg:hidden transition-colors duration-300 ${
+                isDarkMode ? "bg-[#0B0F19] border-r border-white/10" : "bg-white border-r border-slate-200"
+              }`}
             >
               {/* Drawer Title & Close Button */}
-              <div className="flex items-center justify-between p-5 border-b border-[#1E293B]">
+              <div className={`flex items-center justify-between p-5 border-b transition-colors ${isDarkMode ? "border-[#1E293B]" : "border-slate-100"}`}>
                 <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-2.5">
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#D4AF37] to-[#F3E5AB] p-[1.5px]">
-                    <div className="w-full h-full rounded-[7px] bg-[#0B0F19] flex items-center justify-center">
+                    <div className={`w-full h-full rounded-[7px] flex items-center justify-center ${isDarkMode ? "bg-[#0B0F19]" : "bg-white"}`}>
                       <Scale className="w-4 h-4 text-[#D4AF37]" />
                     </div>
                   </div>
-                  <span className="font-poppins text-lg font-bold text-white">
+                  <span className={`font-poppins text-lg font-bold ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>
                     Law<span className="text-[#D4AF37]">Buddy</span>
                   </span>
                 </Link>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-colors"
+                  className={`p-1.5 rounded-lg transition-colors ${
+                    isDarkMode ? "text-slate-400 hover:text-white hover:bg-white/[0.05]" : "text-slate-500 hover:text-[#0B0F19] hover:bg-slate-100"
+                  }`}
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -258,29 +275,29 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 
                 {/* Section 1: Main Platform */}
                 <div className="space-y-1">
-                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider px-3 block mb-2">Main Navigation</span>
+                  <span className={`text-[9px] font-bold uppercase tracking-wider px-3 block mb-2 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Main Navigation</span>
                   
-                  <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <Scale className="w-4 h-4 text-[#D4AF37]" />
                     <span>Home</span>
                   </Link>
                   
-                  <Link to="/universities" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/universities" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <Map className="w-4 h-4 text-[#D4AF37]" />
                     <span>Universities</span>
                   </Link>
 
-                  <Link to="/notes" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/notes" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <BookOpen className="w-4 h-4 text-[#D4AF37]" />
                     <span>LLB Notes</span>
                   </Link>
 
-                  <Link to="/notes" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/notes" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <FileText className="w-4 h-4 text-[#D4AF37]" />
                     <span>Semester Notes</span>
                   </Link>
 
-                  <Link to="/question-papers" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/question-papers" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <FileSignature className="w-4 h-4 text-[#D4AF37]" />
                     <span>Question Papers</span>
                   </Link>
@@ -288,24 +305,24 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                 {/* Section 2: Codes and Holdings */}
                 <div className="space-y-1">
-                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider px-3 block mb-2">Statutes & Case Laws</span>
+                  <span className={`text-[9px] font-bold uppercase tracking-wider px-3 block mb-2 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Statutes & Case Laws</span>
                   
-                  <Link to="/bare-acts" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/bare-acts" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <BookOpen className="w-4 h-4 text-[#D4AF37]" />
                     <span>Bare Acts</span>
                   </Link>
 
-                  <Link to="/case-laws" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/case-laws" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <Award className="w-4 h-4 text-[#D4AF37]" />
                     <span>Case Laws</span>
                   </Link>
 
-                  <Link to="/judiciary" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/judiciary" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
                     <span>Judiciary</span>
                   </Link>
 
-                  <Link to="/premium" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/premium" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <Sparkles className="w-4 h-4 text-[#D4AF37]" />
                     <span>Premium Notes</span>
                   </Link>
@@ -313,14 +330,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                 {/* Section 3: Profile Tabs */}
                 <div className="space-y-1">
-                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider px-3 block mb-2">Student Dashboard</span>
+                  <span className={`text-[9px] font-bold uppercase tracking-wider px-3 block mb-2 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Student Dashboard</span>
                   
-                  <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <Download className="w-4 h-4 text-[#D4AF37]" />
                     <span>Downloads</span>
                   </Link>
 
-                  <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <Bookmark className="w-4 h-4 text-[#D4AF37]" />
                     <span>Bookmarks</span>
                   </Link>
@@ -328,24 +345,24 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                 {/* Section 4: Policy & Legal details */}
                 <div className="space-y-1">
-                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider px-3 block mb-2">LawBuddy Info</span>
+                  <span className={`text-[9px] font-bold uppercase tracking-wider px-3 block mb-2 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>LawBuddy Info</span>
                   
-                  <Link to="/compliance" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/compliance" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <HelpCircle className="w-4 h-4 text-[#D4AF37]" />
                     <span>About</span>
                   </Link>
 
-                  <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <Mail className="w-4 h-4 text-[#D4AF37]" />
                     <span>Contact</span>
                   </Link>
 
-                  <Link to="/compliance" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/compliance" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
                     <span>Privacy Policy</span>
                   </Link>
 
-                  <Link to="/compliance" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                  <Link to="/compliance" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${isDarkMode ? "text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02]" : "text-slate-600 hover:text-[#D4AF37] hover:bg-slate-50"}`}>
                     <FileText className="w-4 h-4 text-[#D4AF37]" />
                     <span>Terms</span>
                   </Link>
@@ -354,7 +371,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               </div>
 
               {/* Drawer Profile Signout Footer */}
-              <div className="p-4 border-t border-[#1E293B] bg-[#0E1322]">
+              <div className={`p-4 border-t transition-colors ${isDarkMode ? "border-[#1E293B] bg-[#0E1322]" : "border-slate-100 bg-slate-50"}`}>
                 {userProfile ? (
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2.5">
@@ -366,7 +383,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                         )}
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-xs font-bold text-white max-w-[120px] truncate">{userProfile.displayName}</span>
+                        <span className={`text-xs font-bold max-w-[120px] truncate ${isDarkMode ? "text-white" : "text-slate-800"}`}>{userProfile.displayName}</span>
                         <span className="text-[9px] text-[#D4AF37] uppercase font-bold">{userProfile.premiumStatus} Scholar</span>
                       </div>
                     </div>
@@ -405,17 +422,21 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#0B0F19]/90 backdrop-blur-md flex items-center justify-center p-4"
+            className={`fixed inset-0 z-50 backdrop-blur-md flex items-center justify-center p-4 transition-colors ${isDarkMode ? "bg-[#0B0F19]/90" : "bg-white/90"}`}
           >
-            <div className="w-full max-w-2xl bg-[#121826] border border-[#1E293B] rounded-2xl p-6 relative shadow-2xl gold-glow">
+            <div className={`w-full max-w-2xl border rounded-2xl p-6 relative shadow-2xl gold-glow transition-colors ${
+              isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+            }`}>
               <button 
                 id="close-search-btn"
                 onClick={() => setIsSearchOpen(false)}
-                className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                className={`absolute top-4 right-4 p-1.5 rounded-lg transition-colors ${
+                  isDarkMode ? "text-slate-400 hover:text-white hover:bg-white/10" : "text-slate-500 hover:text-[#0B0F19] hover:bg-slate-100"
+                }`}
               >
                 <X className="w-5 h-5" />
               </button>
-              <h3 className="font-poppins text-lg font-semibold text-white mb-4">Search LawBuddy Library</h3>
+              <h3 className={`font-poppins text-lg font-semibold mb-4 ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>Search LawBuddy Library</h3>
               <form onSubmit={handleSearchSubmit} className="flex gap-2">
                 <input 
                   id="search-modal-input"
@@ -423,7 +444,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   placeholder="Search Universities, Notes, Bare Acts, Case Laws..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 px-4 py-3 bg-[#0B0F19] border border-[#1E293B] rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
+                  className={`flex-1 px-4 py-3 border rounded-xl placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors ${
+                    isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-white" : "bg-slate-100 border-slate-200 text-slate-900"
+                  }`}
                   autoFocus
                 />
                 <button 
@@ -434,7 +457,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   Search
                 </button>
               </form>
-              <div className="mt-4 text-xs text-slate-400 flex flex-wrap gap-2 items-center">
+              <div className={`mt-4 text-xs flex flex-wrap gap-2 items-center ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
                 <span>Trending:</span>
                 {["BNS 2023", "Article 21", "Kesavananda Bharati", "Contract Act Sec 10", "Semester 3 notes"].map((t) => (
                   <button 
@@ -442,7 +465,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                     onClick={() => {
                       setSearchQuery(t);
                     }}
-                    className="px-2 py-1 rounded bg-[#1E293B] text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors"
+                    className={`px-2 py-1 rounded transition-colors ${
+                      isDarkMode ? "bg-[#1E293B] text-[#D4AF37] hover:bg-[#D4AF37]/10" : "bg-slate-100 text-[#C5A028] hover:bg-slate-200"
+                    }`}
                   >
                     {t}
                   </button>
@@ -456,6 +481,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* CORE APP WORKSPACE CONTENT */}
       <main className="flex-1 relative z-10">
         {children}
+        <FloatingAIAssistant />
       </main>
 
       {/* FOOTER */}

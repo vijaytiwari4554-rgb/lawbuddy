@@ -14,7 +14,7 @@ interface NotesMock {
 }
 
 export const Notes: React.FC = () => {
-  const { recordDownload, addBookmark, isBookmarked } = useApp();
+  const { recordDownload, addBookmark, isBookmarked, isDarkMode } = useApp();
   
   // States
   const [searchTerm, setSearchTerm] = useState("");
@@ -77,16 +77,18 @@ export const Notes: React.FC = () => {
           <BookOpen className="w-3.5 h-3.5" />
           <span>Curated Legal Dossiers</span>
         </div>
-        <h1 className="font-poppins text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+        <h1 className={`font-poppins text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>
           Syllabus-Aligned <span className="gold-gradient-text">LLB & Semester Notes</span>
         </h1>
-        <p className="text-slate-400 text-sm md:text-base leading-relaxed">
+        <p className={`text-sm md:text-base leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
           Premium academic drafts and summaries aligned to major Indian law colleges and universities. All files are updated for BNS 2023.
         </p>
       </div>
 
       {/* Filters Area */}
-      <div className="p-6 bg-[#121826] border border-[#1E293B] rounded-2xl space-y-4 shadow-xl">
+      <div className={`p-6 border rounded-2xl space-y-4 shadow-xl ${
+        isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200"
+      }`}>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
           
           {/* Search bar */}
@@ -98,38 +100,44 @@ export const Notes: React.FC = () => {
               placeholder="Search by topic, university, subject or professor..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-[#0B0F19] border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs sm:text-sm text-white focus:outline-none placeholder-slate-500 transition-colors"
+              className={`w-full pl-10 pr-4 py-3 border focus:border-[#D4AF37] rounded-xl text-xs sm:text-sm focus:outline-none transition-colors ${
+                isDarkMode ? "bg-[#0B0F19] border-[#1E293B] text-white placeholder-slate-500" : "bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400"
+              }`}
             />
           </div>
 
           {/* Semester select */}
-          <div className="flex items-center space-x-2 bg-[#0B0F19] border border-[#1E293B] px-3 py-2 rounded-xl">
+          <div className={`flex items-center space-x-2 border px-3 py-2 rounded-xl ${
+            isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+          }`}>
             <span className="text-[10px] text-slate-500 font-bold uppercase whitespace-nowrap">Semester:</span>
             <select 
               id="notes-filter-semester"
               value={selectedSemester}
               onChange={(e) => setSelectedSemester(e.target.value)}
-              className="w-full bg-transparent text-xs sm:text-sm text-white focus:outline-none"
+              className={`w-full bg-transparent text-xs sm:text-sm focus:outline-none ${isDarkMode ? "text-white" : "text-slate-800"}`}
             >
-              <option value="All" className="bg-[#121826]">All Semesters</option>
+              <option value="All" className={isDarkMode ? "bg-[#121826] text-white" : "bg-white text-slate-800"}>All Semesters</option>
               {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                <option key={s} value={s} className="bg-[#121826]">Semester {s}</option>
+                <option key={s} value={s} className={isDarkMode ? "bg-[#121826] text-white" : "bg-white text-slate-800"}>Semester {s}</option>
               ))}
             </select>
           </div>
 
           {/* University select */}
-          <div className="flex items-center space-x-2 bg-[#0B0F19] border border-[#1E293B] px-3 py-2 rounded-xl">
+          <div className={`flex items-center space-x-2 border px-3 py-2 rounded-xl ${
+            isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"
+          }`}>
             <span className="text-[10px] text-slate-500 font-bold uppercase whitespace-nowrap">University:</span>
             <select 
               id="notes-filter-uni"
               value={selectedUniversity}
               onChange={(e) => setSelectedUniversity(e.target.value)}
-              className="w-full bg-transparent text-xs sm:text-sm text-white focus:outline-none"
+              className={`w-full bg-transparent text-xs sm:text-sm focus:outline-none ${isDarkMode ? "text-white" : "text-slate-800"}`}
             >
-              <option value="All" className="bg-[#121826]">All Universities</option>
+              <option value="All" className={isDarkMode ? "bg-[#121826] text-white" : "bg-white text-slate-800"}>All Universities</option>
               {UNIVERSITIES.map((uni) => (
-                <option key={uni.id} value={uni.name} className="bg-[#121826]">{uni.shortName}</option>
+                <option key={uni.id} value={uni.name} className={isDarkMode ? "bg-[#121826] text-white" : "bg-white text-slate-800"}>{uni.shortName}</option>
               ))}
             </select>
           </div>
@@ -137,16 +145,16 @@ export const Notes: React.FC = () => {
         </div>
 
         {/* Premium Checkbox Toggle */}
-        <div className="flex items-center justify-between pt-2 border-t border-[#1E293B]/60">
+        <div className={`flex items-center justify-between pt-2 border-t ${isDarkMode ? "border-[#1E293B]/60" : "border-slate-100"}`}>
           <label className="flex items-center space-x-2.5 cursor-pointer select-none">
             <input 
               id="premium-only-toggle"
               type="checkbox" 
               checked={showPremiumOnly}
               onChange={(e) => setShowPremiumOnly(e.target.checked)}
-              className="w-4 h-4 accent-[#D4AF37] bg-[#0B0F19] border-[#1E293B] rounded focus:ring-0"
+              className={`w-4 h-4 accent-[#D4AF37] rounded focus:ring-0 ${isDarkMode ? "bg-[#0B0F19] border-[#1E293B]" : "bg-slate-50 border-slate-200"}`}
             />
-            <span className="text-xs text-slate-300 font-semibold flex items-center gap-1">
+            <span className={`text-xs font-semibold flex items-center gap-1 ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
               <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span>Show Premium Locked Notes Only</span>
             </span>
@@ -162,12 +170,14 @@ export const Notes: React.FC = () => {
           return (
             <div 
               key={note.id} 
-              className="p-6 bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/45 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl flex flex-col justify-between group"
+              className={`p-6 border hover:border-[#D4AF37]/45 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl flex flex-col justify-between group ${
+                isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200 shadow-sm"
+              }`}
             >
               <div className="space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
+                    <span className={`text-[10px] font-bold uppercase tracking-wider block ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
                       Sem {note.semester} • {note.subject}
                     </span>
                     <span className="text-xs font-semibold text-[#D4AF37]">
@@ -186,22 +196,22 @@ export const Notes: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="font-poppins text-lg font-bold text-white group-hover:text-[#D4AF37] transition-colors leading-snug">
+                  <h3 className={`font-poppins text-lg font-bold group-hover:text-[#D4AF37] transition-colors leading-snug ${isDarkMode ? "text-white" : "text-slate-800"}`}>
                     {note.title}
                   </h3>
-                  <p className="text-xs text-slate-400">
-                    Syllabus commentary curated by <span className="text-slate-300 font-medium">{note.author}</span>. Contains structural summaries and key case ratio citations.
+                  <p className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+                    Syllabus commentary curated by <span className={isDarkMode ? "text-slate-300 font-medium" : "text-slate-700 font-medium"}>{note.author}</span>. Contains structural summaries and key case ratio citations.
                   </p>
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[#1E293B] flex items-center justify-between gap-2">
+              <div className={`mt-6 pt-4 border-t flex items-center justify-between gap-2 ${isDarkMode ? "border-[#1E293B]" : "border-slate-100"}`}>
                 <button 
                   onClick={() => handleBookmarkToggle(note)}
                   className={`p-2 rounded-lg border transition-all ${
                     isBook 
                       ? "bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/40" 
-                      : "bg-[#0B0F19] text-slate-400 border-[#1E293B] hover:text-white"
+                      : (isDarkMode ? "bg-[#0B0F19] text-slate-400 border-[#1E293B] hover:text-white" : "bg-slate-50 text-slate-500 border-slate-200 hover:text-slate-800")
                   }`}
                   title={isBook ? "Remove Bookmark" : "Save Bookmark"}
                 >

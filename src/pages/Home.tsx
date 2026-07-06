@@ -7,10 +7,20 @@ import {
 } from "lucide-react";
 import { UNIVERSITIES, CASE_LAWS, BARE_ACTS, DAILY_QUIZZES } from "../data/legalData";
 import { motion } from "motion/react";
+import { useApp } from "../context/AppContext";
 
 export const Home: React.FC = () => {
+  const { isDarkMode } = useApp();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
+  // Helper to programmatically detect theme state and style the luxury hero card appropriately
+  const getHeroContainerStyles = (): string => {
+    if (isDarkMode) {
+      return "border border-[#D4AF37]/15 bg-slate-900/40 backdrop-blur-md shadow-2xl shadow-black/20";
+    }
+    return "border border-[#B8860B]/10 bg-white/70 backdrop-blur-md shadow-xl shadow-slate-100/50";
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,8 +52,7 @@ export const Home: React.FC = () => {
     <div id="home-page-container" className="space-y-24 pb-16">
       
       {/* 1. LUXURY HERO WITH ANIMATED CANVAS & SEARCH */}
-      <section className="relative pt-12 md:pt-24 pb-20 overflow-hidden flex flex-col items-center text-center px-4 max-w-5xl mx-auto">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-r from-[#D4AF37]/10 to-transparent blur-[120px] pointer-events-none rounded-full" />
+      <section className={`relative pt-12 md:pt-24 pb-20 overflow-hidden flex flex-col items-center text-center px-4 max-w-5xl mx-auto rounded-3xl transition-all duration-300 hero-gradient-bg ${getHeroContainerStyles()}`}>
         
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,12 +65,14 @@ export const Home: React.FC = () => {
             <span>Fully updated for BNS, BNSS & BSA 2023 Legislation</span>
           </div>
 
-          <h1 className="font-poppins text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-none">
+          <h1 className={`font-poppins text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-none ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>
             India's Premium <br />
-            <span className="gold-gradient-text">Legal Learning Platform</span>
+            <span className="inline-block bg-gradient-to-r from-[#B8860B] via-[#785A00] to-[#B8860B] dark:from-[#FFF] dark:via-[#D4AF37] dark:to-[#F3E5AB] bg-clip-text text-transparent">
+              Legal Learning Platform
+            </span>
           </h1>
 
-          <p className="text-slate-400 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal">
+          <p className={`text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-normal ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
             Master your LLB semesters, access flawless Bare Acts indexation, study landmark analytical case ratios, and ace your State Judiciary Exams with our elite legal study tools.
           </p>
         </motion.div>
@@ -72,7 +83,9 @@ export const Home: React.FC = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="w-full max-w-3xl mt-10 bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/35 transition-all duration-300 rounded-2xl p-2 flex flex-col sm:flex-row items-center gap-2 shadow-xl hover:shadow-[0_10px_30px_rgba(212,175,55,0.06)]"
+          className={`w-full max-w-3xl mt-10 border transition-all duration-300 rounded-2xl p-2 flex flex-col sm:flex-row items-center gap-2 shadow-xl hover:shadow-[0_10px_30px_rgba(212,175,55,0.06)] ${
+            isDarkMode ? "bg-[#121826] border-[#1E293B] hover:border-[#D4AF37]/35" : "bg-white border-slate-200 hover:border-[#D4AF37]/50"
+          }`}
         >
           <div className="flex-1 flex items-center px-4 w-full">
             <Search className="w-5 h-5 text-slate-500 mr-3 flex-shrink-0" />
@@ -82,7 +95,9 @@ export const Home: React.FC = () => {
               placeholder="Search Mumbai Univ notes, Article 21, BNS Section 100, Kesavananda..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full py-3 bg-transparent text-white placeholder-slate-500 focus:outline-none text-sm md:text-base"
+              className={`w-full py-3 bg-transparent focus:outline-none text-sm md:text-base ${
+                isDarkMode ? "text-white placeholder-slate-500" : "text-slate-800 placeholder-slate-400"
+              }`}
             />
           </div>
           <button 
@@ -96,7 +111,7 @@ export const Home: React.FC = () => {
         </motion.form>
 
         {/* Stat Counter Widgets */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl mt-16 text-center border-t border-[#1E293B] pt-8">
+        <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl mt-16 text-center border-t pt-8 ${isDarkMode ? "border-[#1E293B]" : "border-slate-200"}`}>
           {[
             { count: "8+", label: "Top Law Universities" },
             { count: "1,200+", label: "Curated LLB Semester Notes" },
@@ -105,7 +120,7 @@ export const Home: React.FC = () => {
           ].map((stat, i) => (
             <div key={i} className="space-y-1">
               <span className="block font-poppins text-3xl font-extrabold text-[#D4AF37]">{stat.count}</span>
-              <span className="text-xs text-slate-400 uppercase tracking-widest font-semibold">{stat.label}</span>
+              <span className={`text-xs uppercase tracking-widest font-semibold ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{stat.label}</span>
             </div>
           ))}
         </div>
@@ -119,7 +134,7 @@ export const Home: React.FC = () => {
               <Flame className="w-4 h-4 animate-bounce text-[#D4AF37]" />
               <span>Syllabus Master</span>
             </div>
-            <h2 className="font-poppins text-2xl sm:text-3xl font-bold text-white tracking-tight">Trending LLB Study Portals</h2>
+            <h2 className={`font-poppins text-2xl sm:text-3xl font-bold tracking-tight ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>Trending LLB Study Portals</h2>
           </div>
           <Link to="/notes" className="text-sm font-semibold text-[#D4AF37] hover:text-[#F3E5AB] transition-colors flex items-center space-x-1 mt-2 md:mt-0">
             <span>Browse all syllabus subjects</span>
@@ -137,14 +152,16 @@ export const Home: React.FC = () => {
             <Link 
               key={sub.id} 
               to={sub.link} 
-              className="group p-6 bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/40 rounded-2xl relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-md"
+              className={`group p-6 border rounded-2xl relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-md ${
+                isDarkMode ? "bg-[#121826] border-[#1E293B] hover:border-[#D4AF37]/40" : "bg-white border-slate-200 hover:border-[#D4AF37]/50"
+              }`}
             >
               <div className={`absolute inset-0 bg-gradient-to-b ${sub.bg} opacity-50 group-hover:opacity-75 transition-opacity duration-300`} />
               <div className="relative z-10 space-y-4">
                 <BookOpen className="w-8 h-8 text-[#D4AF37] mb-2" />
-                <h3 className="font-poppins text-lg font-bold text-white group-hover:text-[#D4AF37] transition-colors">{sub.name}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">{sub.desc}</p>
-                <div className="flex items-center justify-between pt-4 border-t border-[#1E293B] text-xs font-semibold text-slate-400">
+                <h3 className={`font-poppins text-lg font-bold group-hover:text-[#D4AF37] transition-colors ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>{sub.name}</h3>
+                <p className={`text-xs leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>{sub.desc}</p>
+                <div className={`flex items-center justify-between pt-4 border-t text-xs font-semibold ${isDarkMode ? "border-[#1E293B] text-slate-400" : "border-slate-100 text-slate-500"}`}>
                   <span className="text-[#D4AF37]">{sub.count}</span>
                   <span className="group-hover:translate-x-1 transition-transform duration-200">Study Now →</span>
                 </div>
@@ -155,12 +172,12 @@ export const Home: React.FC = () => {
       </section>
 
       {/* 3. UNIVERSITY DASHBOARDS SECTOR */}
-      <section className="bg-gradient-to-b from-[#0F1422] to-[#0B0F19] py-20 border-y border-[#1E293B]/60">
+      <section className={`py-20 border-y transition-colors duration-300 ${isDarkMode ? "bg-gradient-to-b from-[#0F1422] to-[#0B0F19] border-[#1E293B]/60" : "bg-slate-50 border-slate-200"}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
             <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest">Affiliated Curriculums</span>
-            <h2 className="font-poppins text-3xl font-bold text-white tracking-tight">University Academic Hubs</h2>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h2 className={`font-poppins text-3xl font-bold tracking-tight ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>University Academic Hubs</h2>
+            <p className={`text-sm leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
               Unlock complete semester notes, previous year question papers, and specific course requirements tailored for major law universities.
             </p>
           </div>
@@ -170,16 +187,18 @@ export const Home: React.FC = () => {
               <Link 
                 key={uni.id} 
                 to={`/university/${uni.id}`}
-                className="group p-6 bg-[#121826]/75 border border-[#1E293B] hover:border-[#D4AF37]/50 rounded-2xl transition-all duration-300 hover:shadow-xl flex flex-col justify-between"
+                className={`group p-6 border rounded-2xl transition-all duration-300 hover:shadow-xl flex flex-col justify-between ${
+                  isDarkMode ? "bg-[#121826]/75 border-[#1E293B] hover:border-[#D4AF37]/50" : "bg-white border-slate-200 hover:border-[#D4AF37]/50"
+                }`}
               >
                 <div className="space-y-4">
                   <div className="w-12 h-12 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center font-bold text-[#D4AF37] text-lg border border-[#D4AF37]/20 group-hover:bg-[#D4AF37] group-hover:text-[#0B0F19] transition-all duration-300">
                     {uni.shortName}
                   </div>
-                  <h3 className="font-poppins text-lg font-bold text-white group-hover:text-[#D4AF37] transition-colors">{uni.name}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">{uni.description}</p>
+                  <h3 className={`font-poppins text-lg font-bold group-hover:text-[#D4AF37] transition-colors ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>{uni.name}</h3>
+                  <p className={`text-xs leading-relaxed line-clamp-3 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>{uni.description}</p>
                 </div>
-                <div className="mt-6 pt-4 border-t border-[#1E293B] flex items-center justify-between text-xs text-slate-400 font-semibold">
+                <div className={`mt-6 pt-4 border-t flex items-center justify-between text-xs font-semibold ${isDarkMode ? "border-[#1E293B] text-slate-400" : "border-slate-100 text-slate-500"}`}>
                   <span className="text-[#D4AF37]">{uni.semesters} Semesters</span>
                   <span className="flex items-center text-[#D4AF37] group-hover:underline">
                     <span>Open Hub</span>
@@ -198,8 +217,8 @@ export const Home: React.FC = () => {
           
           {/* Latest Bare Acts */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[#1E293B] pb-4">
-              <h3 className="font-poppins text-xl font-bold text-white flex items-center gap-2">
+            <div className={`flex items-center justify-between border-b pb-4 ${isDarkMode ? "border-[#1E293B]" : "border-slate-200"}`}>
+              <h3 className={`font-poppins text-xl font-bold flex items-center gap-2 ${isDarkMode ? "text-white" : "text-slate-800"}`}>
                 <Scale className="w-5 h-5 text-[#D4AF37]" />
                 <span>Featured Bare Acts</span>
               </h3>
@@ -210,10 +229,12 @@ export const Home: React.FC = () => {
                 <Link 
                   key={act.id} 
                   to="/bare-acts" 
-                  className="block p-4 rounded-xl bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/30 hover:bg-[#121826]/90 transition-all group"
+                  className={`block p-4 rounded-xl border transition-all group ${
+                    isDarkMode ? "bg-[#121826] border-[#1E293B] hover:border-[#D4AF37]/30 hover:bg-[#121826]/90" : "bg-white border-slate-200 hover:border-[#D4AF37]/50 hover:bg-slate-50 shadow-sm"
+                  }`}
                 >
-                  <span className="text-[10px] text-slate-500 font-semibold uppercase block mb-1">Enacted {act.enactmentYear}</span>
-                  <h4 className="text-sm font-bold text-white group-hover:text-[#D4AF37] transition-colors">{act.title}</h4>
+                  <span className={`text-[10px] font-semibold uppercase block mb-1 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Enacted {act.enactmentYear}</span>
+                  <h4 className={`text-sm font-bold group-hover:text-[#D4AF37] transition-colors ${isDarkMode ? "text-white" : "text-slate-800"}`}>{act.title}</h4>
                   <p className="text-xs text-[#D4AF37] mt-2 font-medium">Browse Chapters & Sections →</p>
                 </Link>
               ))}
@@ -222,8 +243,8 @@ export const Home: React.FC = () => {
 
           {/* Featured Case Laws */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[#1E293B] pb-4">
-              <h3 className="font-poppins text-xl font-bold text-white flex items-center gap-2">
+            <div className={`flex items-center justify-between border-b pb-4 ${isDarkMode ? "border-[#1E293B]" : "border-slate-200"}`}>
+              <h3 className={`font-poppins text-xl font-bold flex items-center gap-2 ${isDarkMode ? "text-white" : "text-slate-800"}`}>
                 <Award className="w-5 h-5 text-[#D4AF37]" />
                 <span>Landmark Case Laws</span>
               </h3>
@@ -234,14 +255,16 @@ export const Home: React.FC = () => {
                 <Link 
                   key={caseObj.id} 
                   to="/case-laws" 
-                  className="block p-4 rounded-xl bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/30 hover:bg-[#121826]/90 transition-all group"
+                  className={`block p-4 rounded-xl border transition-all group ${
+                    isDarkMode ? "bg-[#121826] border-[#1E293B] hover:border-[#D4AF37]/30 hover:bg-[#121826]/90" : "bg-white border-slate-200 hover:border-[#D4AF37]/50 hover:bg-slate-50 shadow-sm"
+                  }`}
                 >
                   <span className="text-[10px] text-[#D4AF37] font-bold block mb-1">{caseObj.citation}</span>
-                  <h4 className="text-sm font-bold text-white group-hover:text-[#D4AF37] transition-colors line-clamp-1">{caseObj.title}</h4>
-                  <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">{caseObj.facts}</p>
+                  <h4 className={`text-sm font-bold group-hover:text-[#D4AF37] transition-colors line-clamp-1 ${isDarkMode ? "text-white" : "text-slate-800"}`}>{caseObj.title}</h4>
+                  <p className={`text-xs mt-2 line-clamp-2 leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>{caseObj.facts}</p>
                   <div className="flex gap-1.5 mt-3">
                     {caseObj.keywords.slice(0, 2).map((k) => (
-                      <span key={k} className="px-2 py-0.5 bg-[#1E293B] text-slate-400 text-[10px] rounded-full">{k}</span>
+                      <span key={k} className={`px-2 py-0.5 text-[10px] rounded-full ${isDarkMode ? "bg-[#1E293B] text-slate-400" : "bg-slate-100 text-slate-600"}`}>{k}</span>
                     ))}
                   </div>
                 </Link>
@@ -251,18 +274,20 @@ export const Home: React.FC = () => {
 
           {/* Judiciary Daily Quiz Quick Access */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[#1E293B] pb-4">
-              <h3 className="font-poppins text-xl font-bold text-white flex items-center gap-2">
+            <div className={`flex items-center justify-between border-b pb-4 ${isDarkMode ? "border-[#1E293B]" : "border-slate-200"}`}>
+              <h3 className={`font-poppins text-xl font-bold flex items-center gap-2 ${isDarkMode ? "text-white" : "text-slate-800"}`}>
                 <GraduationCap className="w-5 h-5 text-[#D4AF37]" />
                 <span>Judiciary Practice</span>
               </h3>
               <Link to="/judiciary" className="text-xs text-[#D4AF37] font-semibold hover:underline">Open Planner</Link>
             </div>
-            <div className="p-6 bg-gradient-to-tr from-[#121826] to-[#1a2337] border border-[#D4AF37]/20 rounded-2xl shadow-xl space-y-6 relative overflow-hidden">
+            <div className={`p-6 border rounded-2xl shadow-xl space-y-6 relative overflow-hidden ${
+              isDarkMode ? "bg-gradient-to-tr from-[#121826] to-[#1a2337] border-[#D4AF37]/20" : "bg-white border-slate-200 shadow-sm"
+            }`}>
               <div className="absolute top-0 right-0 w-24 h-24 bg-[#D4AF37]/5 rounded-full blur-xl pointer-events-none" />
               <div>
                 <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider block mb-1">Today's Daily MCQ</span>
-                <p className="text-sm font-semibold text-white leading-relaxed line-clamp-3">
+                <p className={`text-sm font-semibold leading-relaxed line-clamp-3 ${isDarkMode ? "text-white" : "text-slate-800"}`}>
                   {DAILY_QUIZZES[0].question}
                 </p>
               </div>
@@ -280,31 +305,35 @@ export const Home: React.FC = () => {
 
       {/* 5. PREMIUM MEMBERSHIP ADVERTISING CARD */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-r from-[#121826] via-[#1a233a] to-[#121826] border-2 border-[#D4AF37]/35 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div className={`border rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 ${
+          isDarkMode ? "bg-gradient-to-r from-[#121826] via-[#1a233a] to-[#121826] border-[#D4AF37]/35" : "bg-white border-slate-200"
+        }`}>
           <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.1)_0%,transparent_60%)] pointer-events-none rounded-full" />
           
           <div className="space-y-4 max-w-2xl text-center lg:text-left">
             <span className="px-3 py-1 bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-bold rounded-full uppercase tracking-wider inline-block">
               Premium LawBuddy Club
             </span>
-            <h2 className="font-poppins text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
+            <h2 className={`font-poppins text-3xl md:text-4xl font-extrabold tracking-tight leading-tight ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>
               Unlock Complete Case Summaries, Notes & Premium MCQ Banks
             </h2>
-            <p className="text-slate-400 text-sm leading-relaxed">
+            <p className={`text-sm leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
               Become a LawBuddy Pro member to access downloadable high-quality PDF study manuals, comprehensive legal outlines with model answers, priority custom AI chat queries, and mock assessment metrics.
             </p>
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs font-semibold text-slate-300 pt-2">
+            <div className={`flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs font-semibold pt-2 ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
               <span className="flex items-center"><CheckCircle className="w-4 h-4 text-[#D4AF37] mr-1.5" /> Ad-Free Reading Mode</span>
               <span className="flex items-center"><CheckCircle className="w-4 h-4 text-[#D4AF37] mr-1.5" /> Direct PDF Offline Downloads</span>
               <span className="flex items-center"><CheckCircle className="w-4 h-4 text-[#D4AF37] mr-1.5" /> Infinite Gemini AI Legal Prompts</span>
             </div>
           </div>
 
-          <div className="flex-shrink-0 text-center space-y-3 bg-[#0B0F19]/90 border border-[#1E293B] p-6 rounded-2xl w-full max-w-sm">
-            <span className="text-xs text-slate-400 block font-semibold uppercase">Premium Access starts at</span>
+          <div className={`flex-shrink-0 text-center space-y-3 border p-6 rounded-2xl w-full max-w-sm ${
+            isDarkMode ? "bg-[#0B0F19]/90 border-[#1E293B]" : "bg-slate-50 border-slate-200"
+          }`}>
+            <span className={`text-xs block font-semibold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Premium Access starts at</span>
             <div className="flex items-baseline justify-center space-x-1">
-              <span className="text-4xl font-poppins font-black text-white">₹299</span>
-              <span className="text-slate-400 text-xs font-semibold">/ month</span>
+              <span className={`text-4xl font-poppins font-black ${isDarkMode ? "text-white" : "text-slate-900"}`}>₹299</span>
+              <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>/ month</span>
             </div>
             <Link 
               to="/premium" 
@@ -321,8 +350,8 @@ export const Home: React.FC = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest">Alumni Echoes</span>
-          <h2 className="font-poppins text-3xl font-bold text-white tracking-tight">Loved by Thousands of Law Students</h2>
-          <p className="text-sm text-slate-400 leading-relaxed">
+          <h2 className={`font-poppins text-3xl font-bold tracking-tight ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>Loved by Thousands of Law Students</h2>
+          <p className={`text-sm leading-relaxed ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
             Read how LawBuddy empowers students from GLC, ILS, Delhi University, and NLUs to excel in semester exams and legal careers.
           </p>
         </div>
@@ -348,22 +377,24 @@ export const Home: React.FC = () => {
               rating: 5
             }
           ].map((t, idx) => (
-            <div key={idx} className="p-6 bg-[#121826] border border-[#1E293B] rounded-2xl space-y-4 flex flex-col justify-between">
+            <div key={idx} className={`p-6 border rounded-2xl space-y-4 flex flex-col justify-between ${
+              isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200 shadow-sm"
+            }`}>
               <div className="space-y-4">
                 <div className="flex gap-1 text-[#D4AF37]">
                   {Array.from({ length: t.rating }).map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-current" />
                   ))}
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed italic">"{t.text}"</p>
+                <p className={`text-xs leading-relaxed italic ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>"{t.text}"</p>
               </div>
-              <div className="flex items-center space-x-3 pt-4 border-t border-[#1E293B]">
+              <div className={`flex items-center space-x-3 pt-4 border-t ${isDarkMode ? "border-[#1E293B]" : "border-slate-100"}`}>
                 <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] flex items-center justify-center text-[#0B0F19] font-bold text-sm">
                   {t.name[0]}
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white">{t.name}</h4>
-                  <p className="text-[10px] text-slate-500 font-semibold">{t.college}</p>
+                  <h4 className={`text-xs font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>{t.name}</h4>
+                  <p className={`text-[10px] font-semibold ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>{t.college}</p>
                 </div>
               </div>
             </div>
@@ -374,18 +405,18 @@ export const Home: React.FC = () => {
       {/* 7. FREQUENTLY ASKED QUESTIONS */}
       <section className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12 space-y-2">
-          <h2 className="font-poppins text-2xl md:text-3xl font-bold text-white tracking-tight">Frequently Asked Questions</h2>
-          <p className="text-xs text-slate-400 font-medium">Have general questions about the platform? We've got you covered.</p>
+          <h2 className={`font-poppins text-2xl md:text-3xl font-bold tracking-tight ${isDarkMode ? "text-white" : "text-[#0B0F19]"}`}>Frequently Asked Questions</h2>
+          <p className={`text-xs font-medium ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Have general questions about the platform? We've got you covered.</p>
         </div>
 
         <div className="space-y-4">
           {faqs.map((faq, idx) => (
-            <div key={idx} className="p-6 bg-[#121826] border border-[#1E293B] rounded-2xl">
-              <h4 className="font-poppins text-sm md:text-base font-bold text-white mb-2 flex items-start">
+            <div key={idx} className={`p-6 border rounded-2xl ${isDarkMode ? "bg-[#121826] border-[#1E293B]" : "bg-white border-slate-200 shadow-sm"}`}>
+              <h4 className={`font-poppins text-sm md:text-base font-bold mb-2 flex items-start ${isDarkMode ? "text-white" : "text-slate-800"}`}>
                 <HelpCircle className="w-5 h-5 text-[#D4AF37] mr-2.5 flex-shrink-0 mt-0.5" />
                 <span>{faq.q}</span>
               </h4>
-              <p className="text-xs md:text-sm text-slate-400 leading-relaxed pl-7">{faq.a}</p>
+              <p className={`text-xs md:text-sm leading-relaxed pl-7 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>{faq.a}</p>
             </div>
           ))}
         </div>

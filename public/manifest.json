@@ -4,12 +4,12 @@
   "description": "Premium syllabus-aligned LLB notes, Bare Acts index, landmark case analysis, and Indian judiciary preparation.",
   "icons": [
     {
-      "src": "https://img.icons8.com/color/192/scale.png",
+      "src": "/favicon.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "https://img.icons8.com/color/512/scale.png",
+      "src": "/favicon.png",
       "type": "image/png",
       "sizes": "512x512"
     }

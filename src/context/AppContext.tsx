@@ -23,28 +23,32 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved !== null) {
+      return saved === "dark";
+    }
+    return true; // Default to dark mode (luxury black theme)
+  });
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [downloads, setDownloads] = useState<DownloadHistory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // Sync isDarkMode with DOM class list and localStorage
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
+
   // Dark Mode Toggle
   const toggleDarkMode = () => {
-    setIsDarkMode((prev) => {
-      const next = !prev;
-      if (next) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-      return next;
-    });
+    setIsDarkMode((prev) => !prev);
   };
-
-  useEffect(() => {
-    // Initial theme set to dark as requested (Luxury Black theme)
-    document.documentElement.classList.add("dark");
-  }, []);
 
   // Firebase Auth Observer
   useEffect(() => {

@@ -5,9 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LawBuddy – India's Legal Learning Platform | LLB Notes, Bare Acts & Case Laws</title>
     
+    <!-- Theme Initializer to prevent flickering before bundle load -->
+    <script>
+      (function() {
+        try {
+          const saved = localStorage.getItem("theme");
+          if (saved === "dark" || saved === null) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        } catch (e) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    
     <!-- PWA & Mobile Web App Capabilities -->
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#0B0F19" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="theme-color" content="#0B1220" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="LawBuddy" />
@@ -57,8 +75,53 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      .gold-gradient-text {
+        background-image: linear-gradient(135deg, #FFF 0%, #D4AF37 50%, #F3E5AB 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        color: transparent !important;
+        display: inline-block !important;
+        transition: none !important;
+        -webkit-transition: none !important;
+      }
+      
+      html:not(.dark) .gold-gradient-text {
+        background-image: linear-gradient(135deg, #1E293B 0%, #B8860B 50%, #785A00 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        color: transparent !important;
+        display: inline-block !important;
+        transition: none !important;
+        -webkit-transition: none !important;
+      }
+
+      .sophisticated-gradient-text {
+        background-image: linear-gradient(to right, #FFFFFF, #D4AF37, #D4AF37) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        color: transparent !important;
+        display: inline-block !important;
+        transition: none !important;
+        -webkit-transition: none !important;
+      }
+
+      html:not(.dark) .sophisticated-gradient-text {
+        background-image: linear-gradient(to right, #1E293B, #B8860B, #785A00) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        color: transparent !important;
+        display: inline-block !important;
+        transition: none !important;
+        -webkit-transition: none !important;
+      }
+    </style>
   </head>
-  <body class="bg-[#0B0F19] text-white">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
