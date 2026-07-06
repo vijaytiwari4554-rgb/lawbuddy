@@ -16,6 +16,7 @@ import { BlogDetail } from "./pages/BlogDetail";
 import { Premium } from "./pages/Premium";
 import { Profile } from "./pages/Profile";
 import { Login } from "./pages/Login";
+import { Notes } from "./pages/Notes";
 import { Admin } from "./pages/Admin";
 import { SearchResults } from "./pages/SearchResults";
 import { Contact } from "./pages/Contact";
@@ -29,6 +30,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/universities" element={<Universities />} />
+            <Route path="/notes" element={<Notes />} />
             <Route path="/university/:universityId" element={<UniversityDashboard />} />
             <Route path="/subject/:subjectId" element={<SubjectDetail />} />
             <Route path="/question-papers" element={<QuestionPapers />} />

@@ -1,0 +1,22 @@
+{
+  "short_name": "LawBuddy",
+  "name": "LawBuddy – India's Legal Learning Platform",
+  "description": "Premium syllabus-aligned LLB notes, Bare Acts index, landmark case analysis, and Indian judiciary preparation.",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/192/scale.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://img.icons8.com/color/512/scale.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0B0F19",
+  "theme_color": "#D4AF37",
+  "display": "standalone",
+  "orientation": "portrait"
+}

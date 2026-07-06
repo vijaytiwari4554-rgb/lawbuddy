@@ -3,7 +3,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { 
   Scale, Search, Menu, X, User, LogOut, Sun, Moon, 
   BookOpen, FileText, Bookmark, Award, HelpCircle, 
-  Send, ShieldAlert, FileSignature, Map, Mail, Phone, ExternalLink 
+  Send, ShieldAlert, FileSignature, Map, Mail, Phone, ExternalLink,
+  Sparkles, Download
 } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { auth } from "../firebase/config";
@@ -21,9 +22,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -74,12 +84,19 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="absolute top-[800px] right-1/4 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_60%)] pointer-events-none rounded-full" />
 
       {/* STICKY NAVBAR */}
-      <header id="navbar-header" className="sticky top-0 z-50 w-full border-b backdrop-blur-md transition-colors duration-300 border-white/10 bg-[#0B0F19]/80">
+      <header 
+        id="navbar-header" 
+        className={`sticky top-0 z-40 w-full border-b transition-all duration-300 ${
+          isScrolled 
+            ? "border-white/10 bg-[#0B0F19]/90 backdrop-blur-md shadow-lg shadow-[#D4AF37]/5" 
+            : "border-transparent bg-transparent"
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             
-            {/* Logo */}
-            <Link id="navbar-logo" to="/" className="flex items-center space-x-3 group">
+            {/* Logo (Universal) */}
+            <Link id="navbar-logo" to="/" className="flex items-center space-x-3 group flex-shrink-0">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F3E5AB] to-[#D4AF37] p-[1.5px] transition-transform duration-300 group-hover:scale-105">
                 <div className="w-full h-full rounded-[10px] bg-[#0B0F19] flex items-center justify-center">
                   <Scale className="w-5 h-5 text-[#D4AF37]" />
@@ -89,36 +106,51 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="font-poppins text-xl font-bold tracking-tight text-white group-hover:text-[#D4AF37] transition-colors duration-200">
                   Law<span className="text-[#D4AF37]">Buddy</span>
                 </span>
-                <span className="text-[10px] tracking-widest text-slate-400 font-medium uppercase -mt-1 hidden sm:block">
+                <span className="text-[9px] tracking-wider text-slate-400 font-medium uppercase -mt-1 hidden sm:block">
                   India's Legal Learning Platform
                 </span>
               </div>
             </Link>
 
-            {/* Desktop Navigation Links */}
-            <nav id="desktop-nav" className="hidden xl:flex items-center space-x-1">
-              {navLinks.map((link) => {
-                const isActive = location.pathname === link.path;
-                return (
-                  <Link
-                    key={link.name}
-                    to={link.path}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      isActive 
-                        ? "text-[#D4AF37] bg-white/[0.04] border border-[#D4AF37]/20" 
-                        : "text-slate-300 hover:text-white hover:bg-white/[0.02]"
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                );
-              })}
-            </nav>
+            {/* Desktop-Only Search and Navigation (Visible on screen widths >= 1024px) */}
+            <div className="hidden lg:flex items-center space-x-6 flex-1 justify-center px-6">
+              {/* Desktop Large Search Bar */}
+              <form onSubmit={handleSearchSubmit} className="relative max-w-xs w-full">
+                <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search topics, notes..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 bg-[#121826]/75 border border-[#1E293B] focus:border-[#D4AF37] rounded-xl text-xs text-white focus:outline-none placeholder-slate-500 transition-colors"
+                />
+              </form>
 
-            {/* Utility Icons & Profile */}
-            <div className="flex items-center space-x-3">
+              {/* Desktop Menu Links */}
+              <nav id="desktop-nav" className="flex items-center space-x-1">
+                {navLinks.slice(0, 7).map((link) => {
+                  const isActive = location.pathname === link.path;
+                  return (
+                    <Link
+                      key={link.name}
+                      to={link.path}
+                      className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                        isActive 
+                          ? "text-[#D4AF37] bg-white/[0.04] border border-[#D4AF37]/20" 
+                          : "text-slate-300 hover:text-white hover:bg-white/[0.02]"
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* RIGHT SIDEBAR ACTIONS (Responsive: Mobile shows simplified icons; Desktop shows full profiles) */}
+            <div className="flex items-center space-x-2 sm:space-x-3">
               
-              {/* Search Toggle */}
+              {/* Search Trigger Icon (Universal) */}
               <button 
                 id="search-toggle-btn"
                 onClick={() => setIsSearchOpen(true)}
@@ -128,7 +160,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Search className="w-5 h-5" />
               </button>
 
-              {/* Dark Mode Toggle */}
+              {/* Theme Toggle Icon (Universal) */}
               <button 
                 id="darkmode-toggle-btn"
                 onClick={toggleDarkMode}
@@ -138,64 +170,38 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 {isDarkMode ? <Sun className="w-5 h-5 text-[#D4AF37]" /> : <Moon className="w-5 h-5 text-slate-300" />}
               </button>
 
-              {/* User Login/Dashboard */}
+              {/* USER PROFILE / COMPACT LOGIN ICON (Universal) */}
               {userProfile ? (
-                <div className="relative group flex items-center space-x-2">
-                  <Link 
-                    id="user-dashboard-link"
-                    to="/profile" 
-                    className="flex items-center space-x-2 p-1.5 pr-3 rounded-full bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/40 transition-all duration-300"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] flex items-center justify-center text-[#0B0F19] font-bold text-sm overflow-hidden">
-                      {userProfile.photoURL ? (
-                        <img src={userProfile.photoURL} alt="User Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                      ) : (
-                        userProfile.displayName ? userProfile.displayName[0].toUpperCase() : "U"
-                      )}
-                    </div>
-                    <span className="text-xs font-semibold text-slate-300 max-w-[80px] truncate hidden md:inline">
-                      {userProfile.displayName}
-                    </span>
-                    {userProfile.premiumStatus !== "free" && (
-                      <span className="bg-[#D4AF37]/20 border border-[#D4AF37]/50 text-[#D4AF37] text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase scale-90">
-                        {userProfile.premiumStatus}
-                      </span>
+                <Link 
+                  id="user-dashboard-link"
+                  to="/profile" 
+                  className="p-1.5 rounded-full bg-[#121826] border border-[#1E293B] hover:border-[#D4AF37]/40 transition-all duration-300 flex items-center justify-center"
+                  title="My Student Dashboard"
+                >
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] flex items-center justify-center text-[#0B0F19] font-bold text-xs overflow-hidden">
+                    {userProfile.photoURL ? (
+                      <img src={userProfile.photoURL} alt="User Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    ) : (
+                      userProfile.displayName ? userProfile.displayName[0].toUpperCase() : "U"
                     )}
-                  </Link>
-
-                  <button 
-                    id="logout-btn"
-                    onClick={handleLogout}
-                    className="p-2 rounded-lg text-slate-400 hover:text-[#EF4444] hover:bg-red-500/10 transition-colors"
-                    title="Sign Out"
-                  >
-                    <LogOut className="w-5 h-5" />
-                  </button>
-                </div>
+                  </div>
+                </Link>
               ) : (
-                <div className="flex items-center gap-3">
-                  <Link 
-                    to="/premium"
-                    className="px-4 py-2 text-sm font-semibold border border-[#D4AF37]/30 text-[#D4AF37] rounded-lg hover:bg-[#D4AF37]/10 transition-all hidden sm:block"
-                  >
-                    Premium
-                  </Link>
-                  <Link 
-                    id="navbar-login-btn"
-                    to="/login" 
-                    className="px-5 py-2 text-sm font-semibold bg-[#D4AF37] text-[#0B0F19] rounded-lg hover:bg-[#c4a030] shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all flex items-center gap-1.5"
-                  >
-                    <User className="w-4 h-4" />
-                    <span>Login</span>
-                  </Link>
-                </div>
+                <Link 
+                  id="navbar-login-btn"
+                  to="/login" 
+                  className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.05] transition-all flex items-center justify-center"
+                  title="Login to Account"
+                >
+                  <User className="w-5 h-5" />
+                </Link>
               )}
 
-              {/* Mobile menu button */}
+              {/* Hamburger Button (Always visible below 1024px) */}
               <button
                 id="mobile-menu-btn"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="xl:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.05] transition-colors"
+                className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.05] transition-colors"
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -205,36 +211,189 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </header>
 
-      {/* MOBILE NAVIGATION DRAWER */}
+      {/* MOBILE NAVIGATION DRAWER (Slide in from Left, beautiful glassmorphism/luxury finish) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div 
-            id="mobile-drawer"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="xl:hidden bg-[#0D1322] border-b border-[#1E293B] overflow-hidden"
-          >
-            <div className="px-4 pt-3 pb-6 space-y-1 sm:px-6">
-              {navLinks.map((link) => {
-                const isActive = location.pathname === link.path;
-                return (
-                  <Link
-                    key={link.name}
-                    to={link.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
-                      isActive 
-                        ? "text-[#D4AF37] bg-white/[0.04]" 
-                        : "text-slate-300 hover:text-white hover:bg-white/[0.02]"
-                    }`}
-                  >
-                    {link.name}
+          <>
+            {/* Backdrop click-to-close overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm lg:hidden"
+            />
+
+            {/* Main drawer body sliding from the left */}
+            <motion.div
+              id="mobile-drawer"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 220 }}
+              className="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] z-50 bg-[#0B0F19] border-r border-white/10 shadow-2xl flex flex-col lg:hidden"
+            >
+              {/* Drawer Title & Close Button */}
+              <div className="flex items-center justify-between p-5 border-b border-[#1E293B]">
+                <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#D4AF37] to-[#F3E5AB] p-[1.5px]">
+                    <div className="w-full h-full rounded-[7px] bg-[#0B0F19] flex items-center justify-center">
+                      <Scale className="w-4 h-4 text-[#D4AF37]" />
+                    </div>
+                  </div>
+                  <span className="font-poppins text-lg font-bold text-white">
+                    Law<span className="text-[#D4AF37]">Buddy</span>
+                  </span>
+                </Link>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Scrollable Drawer Menu Items */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-5">
+                
+                {/* Section 1: Main Platform */}
+                <div className="space-y-1">
+                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider px-3 block mb-2">Main Navigation</span>
+                  
+                  <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <Scale className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Home</span>
                   </Link>
-                );
-              })}
-            </div>
-          </motion.div>
+                  
+                  <Link to="/universities" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <Map className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Universities</span>
+                  </Link>
+
+                  <Link to="/notes" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <BookOpen className="w-4 h-4 text-[#D4AF37]" />
+                    <span>LLB Notes</span>
+                  </Link>
+
+                  <Link to="/notes" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <FileText className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Semester Notes</span>
+                  </Link>
+
+                  <Link to="/question-papers" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <FileSignature className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Question Papers</span>
+                  </Link>
+                </div>
+
+                {/* Section 2: Codes and Holdings */}
+                <div className="space-y-1">
+                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider px-3 block mb-2">Statutes & Case Laws</span>
+                  
+                  <Link to="/bare-acts" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <BookOpen className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Bare Acts</span>
+                  </Link>
+
+                  <Link to="/case-laws" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <Award className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Case Laws</span>
+                  </Link>
+
+                  <Link to="/judiciary" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Judiciary</span>
+                  </Link>
+
+                  <Link to="/premium" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Premium Notes</span>
+                  </Link>
+                </div>
+
+                {/* Section 3: Profile Tabs */}
+                <div className="space-y-1">
+                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider px-3 block mb-2">Student Dashboard</span>
+                  
+                  <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <Download className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Downloads</span>
+                  </Link>
+
+                  <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <Bookmark className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Bookmarks</span>
+                  </Link>
+                </div>
+
+                {/* Section 4: Policy & Legal details */}
+                <div className="space-y-1">
+                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider px-3 block mb-2">LawBuddy Info</span>
+                  
+                  <Link to="/compliance" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <HelpCircle className="w-4 h-4 text-[#D4AF37]" />
+                    <span>About</span>
+                  </Link>
+
+                  <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <Mail className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Contact</span>
+                  </Link>
+
+                  <Link to="/compliance" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Privacy Policy</span>
+                  </Link>
+
+                  <Link to="/compliance" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-[#D4AF37] hover:bg-white/[0.02] transition-colors">
+                    <FileText className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Terms</span>
+                  </Link>
+                </div>
+
+              </div>
+
+              {/* Drawer Profile Signout Footer */}
+              <div className="p-4 border-t border-[#1E293B] bg-[#0E1322]">
+                {userProfile ? (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2.5">
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#D4AF37] to-[#F3E5AB] flex items-center justify-center text-[#0B0F19] font-bold text-xs overflow-hidden">
+                        {userProfile.photoURL ? (
+                          <img src={userProfile.photoURL} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          userProfile.displayName ? userProfile.displayName[0].toUpperCase() : "U"
+                        )}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-bold text-white max-w-[120px] truncate">{userProfile.displayName}</span>
+                        <span className="text-[9px] text-[#D4AF37] uppercase font-bold">{userProfile.premiumStatus} Scholar</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        handleLogout();
+                      }}
+                      className="p-2 rounded-xl text-slate-400 hover:text-[#EF4444] hover:bg-red-500/10 transition-colors"
+                      title="Sign Out"
+                    >
+                      <LogOut className="w-5 h-5" />
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    to="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full py-2.5 bg-[#D4AF37] hover:bg-[#C5A028] text-[#0B0F19] font-bold text-xs rounded-xl flex items-center justify-center space-x-1.5 transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Login / Sign Up</span>
+                  </Link>
+                )}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 

@@ -18,6 +18,30 @@ export const UNIVERSITIES: University[] = [
     semesters: 6
   },
   {
+    id: "pune-univ",
+    name: "Pune University (SPPU Faculty of Law)",
+    shortName: "SPPU",
+    location: "Pune, Maharashtra",
+    description: "Savitribai Phule Pune University offers highly rigorous law curricula and research opportunities.",
+    semesters: 6
+  },
+  {
+    id: "rtmnu",
+    name: "RTMNU (Rashtrasant Tukadoji Maharaj Nagpur University)",
+    shortName: "RTMNU",
+    location: "Nagpur, Maharashtra",
+    description: "One of Maharashtra's oldest and most prominent public universities offering deep legal modules.",
+    semesters: 6
+  },
+  {
+    id: "sndt",
+    name: "SNDT Women's University (Law School)",
+    shortName: "SNDT",
+    location: "Mumbai, Maharashtra",
+    description: "The first women's university in India, offering premium specialized legal and advocacy programs.",
+    semesters: 6
+  },
+  {
     id: "glc-mumbai",
     name: "Government Law College, Mumbai",
     shortName: "GLC",

@@ -8,7 +8,7 @@ import {
 import { useApp } from "../context/AppContext";
 
 export const SubjectDetail: React.FC = () => {
-  const { subId } = useParams<{ subId: string }>();
+  const { subjectId } = useParams<{ subjectId: string }>();
   const { addBookmark, isBookmarked, removeBookmark, recordDownload } = useApp();
   
   const [copiedLink, setCopiedLink] = useState(false);
@@ -29,8 +29,8 @@ export const SubjectDetail: React.FC = () => {
     }
   };
 
-  const subjectMeta = getSubjectMeta(subId || "contracts-1");
-  const data = SUBJECT_TOPICS[subId || "contracts-1"] || {
+  const subjectMeta = getSubjectMeta(subjectId || "contracts-1");
+  const data = SUBJECT_TOPICS[subjectId || "contracts-1"] || {
     syllabus: ["Syllabus index not loaded. Please contact curriculum advisor."],
     topics: ["Core concepts"],
     notes: ["No digital outlines ready yet."],
@@ -38,18 +38,18 @@ export const SubjectDetail: React.FC = () => {
   };
 
   const handleBookmarkToggle = () => {
-    const bookmarked = isBookmarked(subId || "contracts-1", 'note');
+    const bookmarked = isBookmarked(subjectId || "contracts-1", 'note');
     if (bookmarked) {
       // Find the ID and remove (in simple mode we toggle or prompt)
       alert("Item is already bookmarked! Visit your profile to manage bookmarks.");
     } else {
-      addBookmark(subId || "contracts-1", 'note', subjectMeta.name, `${subjectMeta.university} - Semester ${subjectMeta.semester}`);
+      addBookmark(subjectId || "contracts-1", 'note', subjectMeta.name, `${subjectMeta.university} - Semester ${subjectMeta.semester}`);
       alert("Successfully bookmarked this subject to your Profile dashboard!");
     }
   };
 
   const handleDownload = () => {
-    recordDownload(subId || "contracts-1", 'note', subjectMeta.name);
+    recordDownload(subjectId || "contracts-1", 'note', subjectMeta.name);
     alert(`Success! Standard Syllabus Manual & study notes for "${subjectMeta.name}" downloaded to your device as PDF.`);
   };
 
@@ -111,7 +111,7 @@ export const SubjectDetail: React.FC = () => {
               className="flex items-center justify-center space-x-2 px-5 py-3.5 bg-[#121826] border border-[#D4AF37]/40 hover:border-[#D4AF37] rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all shadow-md"
             >
               <Bookmark className="w-4 h-4 text-[#D4AF37]" />
-              <span>{isBookmarked(subId || "contracts-1", 'note') ? "Bookmarked ✓" : "Bookmark Subject"}</span>
+              <span>{isBookmarked(subjectId || "contracts-1", 'note') ? "Bookmarked ✓" : "Bookmark Subject"}</span>
             </button>
             
             <button 

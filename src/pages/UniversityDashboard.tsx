@@ -12,10 +12,10 @@ import { useApp } from "../context/AppContext";
 import { motion, AnimatePresence } from "motion/react";
 
 export const UniversityDashboard: React.FC = () => {
-  const { uniId } = useParams<{ uniId: string }>();
+  const { universityId } = useParams<{ universityId: string }>();
   const { addBookmark, isBookmarked, removeBookmark, recordDownload, currentUser } = useApp();
   
-  const university = UNIVERSITIES.find((u) => u.id === uniId) || UNIVERSITIES[0];
+  const university = UNIVERSITIES.find((u) => u.id === universityId) || UNIVERSITIES[0];
   const totalSemesters = university.semesters;
   
   const [selectedSemester, setSelectedSemester] = useState(1);
