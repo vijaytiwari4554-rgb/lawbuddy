@@ -194,7 +194,7 @@ For each question, provide:
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: contents,
       config: {
         systemInstruction: systemInstruction,
@@ -204,8 +204,23 @@ For each question, provide:
     const resultText = response.text || "No response received from LawBuddy AI.";
     res.json({ response: resultText });
   } catch (error: any) {
-    console.error("Gemini API Error:", error);
-    res.status(500).json({ error: error.message || "An error occurred with LawBuddy AI" });
+    console.error("Gemini API Server Error:", error);
+    
+    let errorMessage = error.message || "An error occurred with LawBuddy AI";
+    
+    // Attempt to extract friendly error message if Gemini throws a raw JSON string
+    try {
+      if (typeof errorMessage === "string" && errorMessage.trim().startsWith("{")) {
+        const parsed = JSON.parse(errorMessage);
+        if (parsed.error && parsed.error.message) {
+          errorMessage = parsed.error.message;
+        }
+      }
+    } catch (e) {
+      console.error("Error sanitizing API error message:", e);
+    }
+    
+    res.status(500).json({ error: errorMessage });
   }
 });
 

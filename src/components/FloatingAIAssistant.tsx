@@ -262,20 +262,19 @@ export const FloatingAIAssistant: React.FC = () => {
         })
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to receive legal response from LawBuddy AI server.");
-      }
-
       const data = await response.json();
-      
-      const botMessage: Message = {
-        id: `msg-${Date.now()}-b`,
-        role: "model",
-        text: data.response || "No response received.",
-        timestamp: new Date()
-      };
 
-      setMessages((prev) => [...prev, botMessage]);
+      if (response.ok) {
+        const botMessage: Message = {
+          id: `msg-${Date.now()}-b`,
+          role: "model",
+          text: data.response || "No response received.",
+          timestamp: new Date()
+        };
+        setMessages((prev) => [...prev, botMessage]);
+      } else {
+        throw new Error(data.error || "Failed to receive legal response from LawBuddy AI server.");
+      }
     } catch (error: any) {
       const errorMessage: Message = {
         id: `msg-${Date.now()}-err`,
